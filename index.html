@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Control de Residuos Inteligente - Agro Universal. Gestión sostenible de residuos especiales y peligrosos para la industria agrícola y agroindustrial.">
+    <meta name="keywords" content="control residuos, gestión residuos, economía circular, sostenibilidad, agroindustrial, medio ambiente">
+    <title>Control de Residuos | Agro Universal — Gestión Sostenible</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- ========== NAVBAR ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
+                        <path d="M20 8 C14 14, 10 20, 14 26 C16 30, 24 30, 26 26 C30 20, 26 14, 20 8Z" fill="currentColor" opacity="0.3"/>
+                        <path d="M16 18 C18 16, 22 16, 24 18 L22 24 C21 26, 19 26, 18 24Z" fill="currentColor"/>
+                        <path d="M13 20 L15 17 M27 20 L25 17 M20 28 L20 25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="logo-brand">AGRO</span>
+                    <span class="logo-sub">UNIVERSAL</span>
+                </div>
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#inicio" class="nav-link active">Inicio</a>
+                <a href="#nosotros" class="nav-link">Nosotros</a>
+                <a href="#plataforma" class="nav-link">Plataforma</a>
+                <a href="#beneficios" class="nav-link">Beneficios</a>
+                <a href="#contacto" class="nav-link nav-cta">Solicitar Demo</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Menú">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero" id="inicio">
+        <div class="hero-bg">
+            <div class="hero-particles" id="heroParticles"></div>
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge animate-on-scroll">
+                <span class="badge-dot"></span>
+                Plataforma Líder en Gestión Ambiental
+            </div>
+            <h1 class="hero-title animate-on-scroll">
+                Control de Residuos
+                <span class="hero-highlight">Inteligente</span>
+            </h1>
+            <p class="hero-subtitle animate-on-scroll">
+                Transformamos la gestión de residuos especiales y peligrosos en la industria agrícola. 
+                <strong>Economía circular</strong> y <strong>sostenibilidad</strong> al alcance de tu organización.
+            </p>
+            <div class="hero-actions animate-on-scroll">
+                <a href="#contacto" class="btn btn-primary btn-lg">
+                    <span>Comenzar Ahora</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+                <a href="#plataforma" class="btn btn-outline btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                    <span>Ver Plataforma</span>
+                </a>
+            </div>
+            <div class="hero-stats animate-on-scroll">
+                <div class="hero-stat">
+                    <span class="stat-number" data-target="500">0</span><span class="stat-suffix">+</span>
+                    <span class="stat-label">Empresas Confían</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="stat-number" data-target="98">0</span><span class="stat-suffix">%</span>
+                    <span class="stat-label">Satisfacción</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="stat-number" data-target="15000">0</span><span class="stat-suffix">t</span>
+                    <span class="stat-label">Residuos Gestionados</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <div class="scroll-line"></div>
+            <span>Desliza</span>
+        </div>
+    </section>
+
+    <!-- ========== PROPUESTA DE VALOR ========== -->
+    <section class="value-section" id="nosotros">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">¿Por qué elegirnos?</span>
+                <h2 class="section-title">Aliados Estratégicos en <span class="text-gradient">Desarrollo Sostenible</span></h2>
+                <p class="section-desc">Brindamos un servicio de máxima calidad y eficiencia, con enfoque en la economía circular y la conservación del medio ambiente.</p>
+            </div>
+            <div class="value-grid">
+                <div class="value-card animate-on-scroll" data-delay="0">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                            <path d="M24 12C18 18 14 22 18 30C20 34 28 34 30 30C34 22 30 18 24 12Z" fill="currentColor" opacity="0.2"/>
+                            <path d="M20 22C22 20 26 20 28 22L26 28C25 30 23 30 22 28Z" fill="currentColor"/>
+                            <path d="M24 8V12M32 12L30 15M36 20H32M32 28L30 26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Economía Circular</h3>
+                    <p class="card-desc">Convertimos residuos en recursos valiosos. Maximizamos el reciclaje y la reutilización para reducir el impacto ambiental.</p>
+                    <div class="card-line"></div>
+                </div>
+                <div class="value-card animate-on-scroll" data-delay="100">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                            <path d="M16 28L22 22L26 26L32 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="16" cy="28" r="2" fill="currentColor"/>
+                            <circle cx="22" cy="22" r="2" fill="currentColor"/>
+                            <circle cx="26" cy="26" r="2" fill="currentColor"/>
+                            <circle cx="32" cy="20" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Trazabilidad Total</h3>
+                    <p class="card-desc">Seguimiento en tiempo real de cada residuo desde su generación hasta su disposición final. Control total garantizado.</p>
+                    <div class="card-line"></div>
+                </div>
+                <div class="value-card animate-on-scroll" data-delay="200">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 6L38 14V34L24 42L10 34V14L24 6Z" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                            <path d="M24 6L38 14L24 22L10 14L24 6Z" fill="currentColor" opacity="0.15"/>
+                            <path d="M24 22V42M24 22L38 14M24 22L10 14" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="24" cy="24" r="4" fill="currentColor" opacity="0.5"/>
+                            <path d="M20 24L23 27L28 21" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Cumplimiento Normativo</h3>
+                    <p class="card-desc">Garantizamos el cumplimiento de toda la normatividad ambiental vigente. Certificados RCNA incluidos.</p>
+                    <div class="card-line"></div>
+                </div>
+                <div class="value-card animate-on-scroll" data-delay="300">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="24" cy="24" r="16" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                            <circle cx="24" cy="24" r="8" stroke="currentColor" stroke-width="2" opacity="0.5"/>
+                            <circle cx="24" cy="24" r="3" fill="currentColor"/>
+                            <path d="M24 8V14M24 34V40M8 24H14M34 24H40" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Precisión y Eficiencia</h3>
+                    <p class="card-desc">Datos precisos en tiempo real. Optimizamos procesos para reducir costos y maximizar la eficiencia operativa.</p>
+                    <div class="card-line"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PLATAFORMA / DASHBOARD ========== -->
+    <section class="platform-section" id="plataforma">
+        <div class="container">
+            <div class="platform-grid">
+                <div class="platform-info animate-on-scroll">
+                    <span class="section-tag">Nuestra Plataforma</span>
+                    <h2 class="section-title">Un Dashboard que <span class="text-gradient">Trasciende</span> lo Convencional</h2>
+                    <p class="platform-desc">Olvídate de las hojas de cálculo. Nuestra plataforma ofrece visualización inteligente de datos con gráficos interactivos, reportes automáticos y alertas en tiempo real.</p>
+                    <ul class="platform-features">
+                        <li class="animate-on-scroll" data-delay="100">
+                            <div class="feature-check">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <span>Gráficos interactivos en tiempo real</span>
+                        </li>
+                        <li class="animate-on-scroll" data-delay="200">
+                            <div class="feature-check">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <span>Reportes automáticos descargables</span>
+                        </li>
+                        <li class="animate-on-scroll" data-delay="300">
+                            <div class="feature-check">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <span>Alertas inteligentes y notificaciones</span>
+                        </li>
+                        <li class="animate-on-scroll" data-delay="400">
+                            <div class="feature-check">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <span>Integración con normativas RCNA</span>
+                        </li>
+                        <li class="animate-on-scroll" data-delay="500">
+                            <div class="feature-check">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <span>Acceso multiplataforma (web y móvil)</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="platform-visual animate-on-scroll">
+                    <div class="dashboard-mockup">
+                        <div class="mockup-bar">
+                            <div class="mockup-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="mockup-url">app.agrouniversal.com/dashboard</span>
+                        </div>
+                        <div class="mockup-body">
+                            <img src="assets/images/dashboard-preview.png" alt="Vista previa del dashboard de Control de Residuos" loading="lazy">
+                            <div class="mockup-overlay"></div>
+                        </div>
+                    </div>
+                    <div class="floating-card fc-1 animate-float">
+                        <div class="fc-icon fc-green">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div class="fc-info">
+                            <span class="fc-label">Reciclaje</span>
+                            <span class="fc-value">+87%</span>
+                        </div>
+                    </div>
+                    <div class="floating-card fc-2 animate-float" style="animation-delay: 1s;">
+                        <div class="fc-icon fc-gold">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <div class="fc-info">
+                            <span class="fc-label">Cumplimiento</span>
+                            <span class="fc-value">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== BENEFICIOS ========== -->
+    <section class="benefits-section" id="beneficios">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">Beneficios</span>
+                <h2 class="section-title">Todo lo que Necesitas para una <span class="text-gradient">Gestión Impecable</span></h2>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-item animate-on-scroll" data-delay="0">
+                    <div class="benefit-number">01</div>
+                    <div class="benefit-content">
+                        <h3>Reducción de Costos</h3>
+                        <p>Optimiza la gestión de residuos y reduce los costos operativos hasta en un 40% con nuestra plataforma automatizada.</p>
+                    </div>
+                </div>
+                <div class="benefit-item animate-on-scroll" data-delay="100">
+                    <div class="benefit-number">02</div>
+                    <div class="benefit-content">
+                        <h3>Impacto Ambiental Positivo</h3>
+                        <p>Contribuye activamente a la conservación del medio ambiente con métricas claras de tu huella ecológica.</p>
+                    </div>
+                </div>
+                <div class="benefit-item animate-on-scroll" data-delay="200">
+                    <div class="benefit-number">03</div>
+                    <div class="benefit-content">
+                        <h3>Reportes Automáticos</h3>
+                        <p>Genera reportes de cumplimiento normativo de forma automática, listos para auditorías y certificaciones.</p>
+                    </div>
+                </div>
+                <div class="benefit-item animate-on-scroll" data-delay="300">
+                    <div class="benefit-number">04</div>
+                    <div class="benefit-content">
+                        <h3>Soporte Especializado</h3>
+                        <p>Equipo de expertos en gestión ambiental disponible 24/7 para asistirte en cada etapa del proceso.</p>
+                    </div>
+                </div>
+                <div class="benefit-item animate-on-scroll" data-delay="400">
+                    <div class="benefit-number">05</div>
+                    <div class="benefit-content">
+                        <h3>Escalabilidad Total</h3>
+                        <p>Desde pequeñas fincas hasta grandes complejos agroindustriales. La plataforma crece contigo.</p>
+                    </div>
+                </div>
+                <div class="benefit-item animate-on-scroll" data-delay="500">
+                    <div class="benefit-number">06</div>
+                    <div class="benefit-content">
+                        <h3>Integración Sencilla</h3>
+                        <p>Compatible con tus sistemas existentes. Implementación rápida sin interrumpir tus operaciones.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CTA + FORMULARIO ========== -->
+    <section class="contact-section" id="contacto">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-info animate-on-scroll">
+                    <span class="section-tag">Contáctanos</span>
+                    <h2 class="section-title">Transforma tu Gestión de Residuos <span class="text-gradient">Hoy Mismo</span></h2>
+                    <p class="contact-desc">Solicita una demostración gratuita y descubre cómo nuestra plataforma puede revolucionar la gestión ambiental de tu empresa.</p>
+                    <div class="contact-highlights">
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <span>Demo personalizada sin costo</span>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <span>Implementación en menos de 48 horas</span>
+                        </div>
+                        <div class="highlight-item">
+                            <div class="highlight-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <span>Soporte técnico incluido</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-wrapper animate-on-scroll">
+                    <form class="contact-form" id="contactForm">
+                        <h3 class="form-title">Solicita tu Demo Gratuita</h3>
+                        <div class="form-group">
+                            <label for="nombre">Nombre completo</label>
+                            <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="empresa">Empresa</label>
+                            <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" name="email" placeholder="correo@empresa.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" placeholder="+57 300 000 0000">
+                        </div>
+                        <div class="form-group">
+                            <label for="mensaje">¿Qué necesitas gestionar?</label>
+                            <select id="mensaje" name="tipo_residuo">
+                                <option value="" disabled selected>Selecciona el tipo de residuo</option>
+                                <option value="peligrosos">Residuos Peligrosos</option>
+                                <option value="especiales">Residuos Especiales</option>
+                                <option value="organicos">Residuos Orgánicos</option>
+                                <option value="reciclables">Residuos Reciclables</option>
+                                <option value="mixtos">Gestión Integral</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-full" id="submitBtn">
+                            <span>Solicitar Demo Gratuita</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                        </button>
+                        <p class="form-note">🔒 Tu información está segura. No compartimos datos con terceros.</p>
+                    </form>
+                    <div class="form-success" id="formSuccess">
+                        <div class="success-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <h3>¡Solicitud Enviada!</h3>
+                        <p>Nos pondremos en contacto contigo en menos de 24 horas. ¡Gracias por tu interés!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="nav-logo">
+                        <div class="logo-icon">
+                            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
+                                <path d="M20 8 C14 14, 10 20, 14 26 C16 30, 24 30, 26 26 C30 20, 26 14, 20 8Z" fill="currentColor" opacity="0.3"/>
+                                <path d="M16 18 C18 16, 22 16, 24 18 L22 24 C21 26, 19 26, 18 24Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <div class="logo-text">
+                            <span class="logo-brand">AGRO</span>
+                            <span class="logo-sub">UNIVERSAL</span>
+                        </div>
+                    </div>
+                    <p class="footer-desc">Aliados estratégicos en desarrollo empresarial sostenible. Economía circular y conservación del medio ambiente.</p>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Navegación</h4>
+                    <a href="#inicio">Inicio</a>
+                    <a href="#nosotros">Nosotros</a>
+                    <a href="#plataforma">Plataforma</a>
+                    <a href="#beneficios">Beneficios</a>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Servicios</h4>
+                    <a href="#">Gestión de Residuos</a>
+                    <a href="#">Economía Circular</a>
+                    <a href="#">Consultoría Ambiental</a>
+                    <a href="#">Certificación RCNA</a>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Contacto</h4>
+                    <a href="mailto:info@agrouniversal.com">info@agrouniversal.com</a>
+                    <a href="tel:+573000000000">+57 300 000 0000</a>
+                    <a href="#">Colombia</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Agro Universal. Todos los derechos reservados.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="LinkedIn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                    <a href="#" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                    </a>
+                    <a href="#" aria-label="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
