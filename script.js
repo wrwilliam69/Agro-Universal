@@ -75,6 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     animatedElements.forEach(el => observer.observe(el));
+	// Forzar visibilidad de elementos en el hero al cargar
+	document.querySelectorAll('.hero .animate-on-scroll').forEach(el => {
+    el.classList.add('visible');
+	});
 
     // ===== NUMBER COUNTER ANIMATION =====
     const statNumbers = document.querySelectorAll('.stat-number');
