@@ -161,14 +161,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Simulate sending
-            submitBtn.innerHTML = '<span>Enviando...</span><div class="spinner"></div>';
-            submitBtn.disabled = true;
+         submitBtn.innerHTML = '<span>Enviando...</span><div class="spinner"></div>';
+submitBtn.disabled = true;
 
-            setTimeout(() => {
-                contactForm.style.display = 'none';
-                formSuccess.classList.add('show');
-            }, 1500);
-        });
+const telefono = document.getElementById('telefono').value.trim();
+const tipoResiduo = document.getElementById('mensaje').value;
+
+fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nombre, empresa, email, telefono, tipo_residuo: tipoResiduo })
+})
+.then(res => res.json())
+.then(() => {
+    contactForm.style.display = 'none';
+    formSuccess.classList.add('show');
+})
+.catch(() => {
+    submitBtn.innerHTML = '<span>Solicitar Demo Gratuita</span>';
+    submitBtn.disabled = false;
+    alert('Error al enviar. Intenta de nuevo.');
+});
     }
 
     function validateEmail(email) {
