@@ -176,16 +176,30 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nombre, empresa, email, telefono, tipo_residuo: tipoResiduo })
 })
-.then(res => res.json())
-.then(() => {
+.then(async res => {
+    if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`HTTP error! status: ${res.status}, body: ${errorText}`);
+    }
+    // AWS API Gateway a veces devuelve texto o un JSON escapado
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+        return res.json();
+    }
+    return res.text();
+})
+.then(data => {
+    console.log("Respuesta de AWS:", data);
     contactForm.style.display = 'none';
     formSuccess.classList.add('show');
 })
-.catch(() => {
+.catch(error => {
+    console.error("Error detallado del fetch:", error);
     submitBtn.innerHTML = '<span>Solicitar Demo Gratuita</span>';
     submitBtn.disabled = false;
-    alert('Error al enviar. Intenta de nuevo.');
+    alert('Error al enviar. Intenta de nuevo. Revisa la consola para más detalles.');
 });
+        });
     }
 
     function validateEmail(email) {
