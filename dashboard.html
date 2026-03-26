@@ -378,6 +378,7 @@
       <span id="apiLabel">API: Desconectada</span>
     </div>
     <a href="index.html" class="btn-top"><i class="fa fa-arrow-left"></i> Volver al Inicio</a>
+    <span id="sync-indicator" style="font-size:.75rem;color:var(--gray-500);display:flex;align-items:center;gap:5px"></span>
     <button class="btn-top primary" onclick="saveAllData()"><i class="fa fa-save"></i> Guardar</button>
   </div>
 </div>
@@ -399,11 +400,10 @@
 <div id="tab-data" class="tab-panel active">
 
   <div class="action-bar">
-    <button class="btn btn-save" onclick="saveAllData()"><i class="fa fa-save"></i> Guardar Todo</button>
+    <button class="btn btn-save" onclick="saveAllData()"><i class="fa fa-save"></i> Guardar</button>
     <button class="btn btn-demo" onclick="loadDemoData()"><i class="fa fa-flask"></i> Cargar Datos Demo</button>
     <button class="btn btn-export" onclick="exportCSV()"><i class="fa fa-download"></i> Exportar CSV</button>
     <button class="btn btn-load" onclick="importCSV()"><i class="fa fa-upload"></i> Importar CSV</button>
-    <button class="btn btn-aws" onclick="syncAWS()"><i class="fa fa-cloud-upload-alt"></i> Sincronizar AWS</button>
     <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
   </div>
 
@@ -777,10 +777,24 @@ function readTrucks() {
   D.trucks.bins      = +document.getElementById('trucks-bins').value;
 }
 
+// ====================================================
+// AUTO-SYNC — debounced, fires 2s after last change
+// ====================================================
+let autoSaveTimer = null;
+const DEBOUNCE_MS = 2000;
+
 function onDataChange() {
   readTrucks();
   saveLocal();
   renderAll();
+  scheduleAutoSync();
+}
+
+function scheduleAutoSync() {
+  const ind = document.getElementById('sync-indicator');
+  if (ind) ind.innerHTML = '<i class="fa fa-circle-notch fa-spin"></i> Guardando...';
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => syncAWS(true), DEBOUNCE_MS);
 }
 
 // ====================================================
@@ -800,16 +814,17 @@ function saveAllData() {
   readTrucks();
   saveLocal();
   renderAll();
-  toast('Datos guardados localmente');
+  syncAWS(false);
 }
 
 // ====================================================
 // AWS SYNC
 // ====================================================
-async function syncAWS() {
+async function syncAWS(silent = false) {
   readTrucks();
   const dot = document.getElementById('apiDot');
   const lbl = document.getElementById('apiLabel');
+  const ind = document.getElementById('sync-indicator');
   try {
     const res = await fetch(API_BASE + '/dashboard', {
       method: 'POST',
@@ -819,15 +834,20 @@ async function syncAWS() {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     dot.className = 'api-dot online';
     lbl.textContent = 'API: Conectada';
-    toast('Datos sincronizados con AWS');
+    if (ind) ind.innerHTML = '<i class="fa fa-check-circle" style="color:var(--accent)"></i> Sincronizado';
+    setTimeout(() => { if (ind) ind.innerHTML = ''; }, 3000);
+    if (!silent) toast('Datos sincronizados con AWS');
   } catch(err) {
     dot.className = 'api-dot offline';
-    lbl.textContent = 'API: Error';
-    toast('Error AWS: ' + err.message + ' — Se requiere crear el endpoint /dashboard en API Gateway');
+    lbl.textContent = 'API: Sin endpoint';
+    if (ind) ind.innerHTML = '<i class="fa fa-exclamation-circle" style="color:var(--gold-500)"></i> Solo local';
+    if (!silent) toast('AWS no disponible aun — datos guardados localmente');
   }
 }
 
 async function loadFromAWS() {
+  const dot = document.getElementById('apiDot');
+  const lbl = document.getElementById('apiLabel');
   try {
     const res = await fetch(API_BASE + '/dashboard?action=load');
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -836,12 +856,12 @@ async function loadFromAWS() {
       D = json.data;
       buildForms();
       renderAll();
-      document.getElementById('apiDot').className = 'api-dot online';
-      document.getElementById('apiLabel').textContent = 'API: Conectada';
+      dot.className = 'api-dot online';
+      lbl.textContent = 'API: Conectada';
       toast('Datos cargados desde AWS');
     }
   } catch(err) {
-    // silently fall back to local
+    // silently fall back to localStorage — endpoint not yet created
   }
 }
 

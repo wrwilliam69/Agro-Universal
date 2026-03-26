@@ -1,0 +1,213 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Agro Universal — Dashboard de Residuos
+  Crea: DynamoDB table + Lambda function + API Gateway resource /dashboard
+  Se integra con el API Gateway existente via ApiGatewayId
+
+# ==============================================================
+# PARAMETROS — ajusta antes de desplegar
+# ==============================================================
+Parameters:
+  ExistingApiId:
+    Type: String
+    Default: "vx45elu3qb"
+    Description: "ID del API Gateway existente (parte de tu URL actual)"
+
+  ExistingApiRootResourceId:
+    Type: String
+    Description: "Root Resource ID del API Gateway existente (obtenlo en API Gateway > Resources)"
+
+  StageName:
+    Type: String
+    Default: "Prod"
+    Description: "Stage del API Gateway existente"
+
+  TableName:
+    Type: String
+    Default: "wm-dashboard"
+    Description: "Nombre de la tabla DynamoDB"
+
+# ==============================================================
+# RECURSOS
+# ==============================================================
+Resources:
+
+  # --- 1. DYNAMODB TABLE ---
+  DashboardTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref TableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+      Tags:
+        - Key: Project
+          Value: AgroUniversal
+
+  # --- 2. IAM ROLE para Lambda ---
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: wm-dashboard-lambda-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                Resource: !GetAtt DashboardTable.Arn
+
+  # --- 3. LAMBDA FUNCTION ---
+  DashboardLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: wm-dashboard-handler
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt LambdaRole.Arn
+      Timeout: 10
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref TableName
+      Code:
+        ZipFile: |
+          const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
+          const { DynamoDBDocumentClient, GetCommand, PutCommand } = require('@aws-sdk/lib-dynamodb');
+          const client = new DynamoDBClient({});
+          const dynamo = DynamoDBDocumentClient.from(client);
+          const TABLE = process.env.TABLE_NAME || 'wm-dashboard';
+          const HEADERS = {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+          };
+          exports.handler = async (event) => {
+            if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers: HEADERS, body: '' };
+            try {
+              if (event.httpMethod === 'GET') {
+                const result = await dynamo.send(new GetCommand({ TableName: TABLE, Key: { pk: 'DASHBOARD' } }));
+                return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ data: result.Item ? result.Item.data : null }) };
+              }
+              if (event.httpMethod === 'POST') {
+                const body = JSON.parse(event.body);
+                if (!body.data) return { statusCode: 400, headers: HEADERS, body: JSON.stringify({ error: 'Missing data' }) };
+                await dynamo.send(new PutCommand({ TableName: TABLE, Item: { pk: 'DASHBOARD', data: body.data, updatedAt: new Date().toISOString() } }));
+                return { statusCode: 200, headers: HEADERS, body: JSON.stringify({ message: 'Saved' }) };
+              }
+              return { statusCode: 405, headers: HEADERS, body: JSON.stringify({ error: 'Method not allowed' }) };
+            } catch (err) {
+              return { statusCode: 500, headers: HEADERS, body: JSON.stringify({ error: err.message }) };
+            }
+          };
+
+  # --- 4. PERMISO API GATEWAY → LAMBDA ---
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt DashboardLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ExistingApiId}/*/*/dashboard"
+
+  # --- 5. API GATEWAY RESOURCE /dashboard ---
+  DashboardResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref ExistingApiId
+      ParentId: !Ref ExistingApiRootResourceId
+      PathPart: dashboard
+
+  # --- 6. GET METHOD ---
+  DashboardGet:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ExistingApiId
+      ResourceId: !Ref DashboardResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DashboardLambda.Arn}/invocations"
+
+  # --- 7. POST METHOD ---
+  DashboardPost:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ExistingApiId
+      ResourceId: !Ref DashboardResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DashboardLambda.Arn}/invocations"
+
+  # --- 8. OPTIONS (CORS preflight) ---
+  DashboardOptions:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref ExistingApiId
+      ResourceId: !Ref DashboardResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      Integration:
+        Type: MOCK
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        IntegrationResponses:
+          - StatusCode: '200'
+            ResponseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type'"
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+      MethodResponses:
+        - StatusCode: '200'
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: true
+            method.response.header.Access-Control-Allow-Methods: true
+            method.response.header.Access-Control-Allow-Origin: true
+
+  # --- 9. REDEPLOY del stage ---
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - DashboardGet
+      - DashboardPost
+      - DashboardOptions
+    Properties:
+      RestApiId: !Ref ExistingApiId
+      StageName: !Ref StageName
+
+# ==============================================================
+# OUTPUTS
+# ==============================================================
+Outputs:
+  DashboardEndpoint:
+    Description: "URL del endpoint /dashboard"
+    Value: !Sub "https://${ExistingApiId}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/dashboard"
+
+  TableName:
+    Description: "Tabla DynamoDB creada"
+    Value: !Ref DashboardTable
+
+  LambdaName:
+    Description: "Funcion Lambda creada"
+    Value: !Ref DashboardLambda
