@@ -276,7 +276,7 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                     datasets: [{
                         label: 'Emisiones de CO2eq',
                         data: [75.6, 74.6, 70.9, 69.6, 65.2],
-                        backgroundColor: ['#1A5C3A', '#1A5C3A', '#1A5C3A', '#1A5C3A', '#34A853'],
+                        backgroundColor: ['#0F2A1A', '#0F2A1A', '#0F2A1A', '#0F2A1A', '#28CA42'],
                         borderRadius: 4
                     }]
                 },
@@ -302,7 +302,7 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                         type: 'bar',
                         label: '% Residuo Orgánico/Doméstico',
                         data: [61, 58, 55, 45, 40, 35],
-                        backgroundColor: ['#1A5C3A', '#1A5C3A', '#1A5C3A', '#1A5C3A', '#1A5C3A', '#C8A951'],
+                        backgroundColor: ['#0F2A1A', '#0F2A1A', '#0F2A1A', '#0F2A1A', '#0F2A1A', '#28CA42'],
                         borderRadius: 4
                     }]
                 },
@@ -319,7 +319,7 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                     labels: ['Renovable', 'Gas Natural', 'Gasolina Motor', 'Subproductos', 'Biomasa'],
                     datasets: [{
                         data: [35, 32, 18, 10, 5],
-                        backgroundColor: ['#34A853', '#A8E6C1', '#C8A951', '#E0CB83', '#5BBC73'],
+                        backgroundColor: ['#28CA42', '#14592B', '#0F2A1A', '#A8E6C1', '#1A5C3A'],
                         borderWidth: 0
                     }]
                 },
@@ -336,7 +336,7 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                     labels: ['Moviendo Reciclaje', 'Moviendo Residuos', 'En Espera'],
                     datasets: [{
                         data: [45, 40, 15],
-                        backgroundColor: ['#34A853', '#1A2620', '#C8A951'],
+                        backgroundColor: ['#28CA42', '#1A5C3A', '#0F2A1A'],
                         borderWidth: 0
                     }]
                 },
@@ -354,11 +354,11 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                     datasets: [{
                         label: 'Material Reciclado',
                         data: [900, 1000, 1100, 1200, 1400],
-                        backgroundColor: '#34A853'
+                        backgroundColor: '#28CA42'
                     }, {
                         label: 'Basura Sólida',
                         data: [1600, 1400, 1500, 1300, 1200],
-                        backgroundColor: '#1A2620'
+                        backgroundColor: '#0F2A1A'
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, grid: {display: false} }, y: { stacked: true, grid: gridConfig } } }
@@ -374,7 +374,7 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                     labels: ['Orgánico Compostado', 'Plástico Reciclado', 'Papel/Cartón', 'Desecho No Recuperable'],
                     datasets: [{
                         data: [40, 25, 20, 15],
-                        backgroundColor: ['#0F5132', '#34A853', '#C8A951', '#1A2620'],
+                        backgroundColor: ['#28CA42', '#1A5C3A', '#0F2A1A', '#101914'],
                         borderWidth: 0
                     }]
                 },

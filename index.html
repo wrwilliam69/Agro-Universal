@@ -95,69 +95,107 @@
         </div>
     </section>
 
-    <!-- ========== DASHBOARD INTERACTIVO ========== -->
+    <!-- ========== CALCULADORA / DASHBOARD INTERACTIVO ========== -->
     <section class="dashboard-section" id="dashboard">
         <div class="container">
             <div class="section-header animate-on-scroll">
-                <span class="section-tag">Dashboard en Vivo</span>
-                <h2 class="section-title">Simulador de <span class="text-gradient">Impacto Ambiental</span></h2>
-                <p class="section-desc">Mueve los controles a continuación para simular escenarios. Las gráficas calcularán y se actualizarán matemáticamente en tiempo real.</p>
+                <span class="section-tag">Calculadora en Vivo</span>
+                <h2 class="section-title">Análisis de <span class="text-gradient">Impacto Ambiental</span></h2>
+                <p class="section-desc">Mueve los parámetros a continuación para calcular escenarios utilizando la misma interfaz embebida de nuestra plataforma avanzada.</p>
             </div>
 
-            <!-- Controles del Simulador -->
-            <div class="dashboard-controls animate-on-scroll">
-                <div class="control-group">
-                    <label for="simWaste">Residuos Generados (Ton/mes)</label>
-                    <input type="range" id="simWaste" min="500" max="5000" value="1500" step="10">
-                    <span id="simWasteVal">1,500 Ton</span>
+            <div class="app-ui-wrapper animate-on-scroll">
+                <!-- Menú Lateral del App -->
+                <div class="app-sidebar">
+                    <div class="app-sidebar-top">
+                        <div class="app-logo-mini">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                        </div>
+                    </div>
+                    <div class="app-sidebar-menu">
+                        <a href="#dashboard" class="app-nav-item active" title="Calculadora de Impacto">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                        </a>
+                        <a href="#dashboard" class="app-nav-item" title="Métricas">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                        </a>
+                        <a href="#dashboard" class="app-nav-item" title="Reportes">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        </a>
+                        <a href="#dashboard" class="app-nav-item" title="Ajustes">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                        </a>
+                    </div>
                 </div>
-                <div class="control-group">
-                    <label for="simRecycled">Material Reciclado (Ton/mes)</label>
-                    <input type="range" id="simRecycled" min="0" max="5000" value="900" step="10">
-                    <span id="simRecycledVal">900 Ton</span>
-                </div>
-                <div class="control-group">
-                    <label for="simEnergy">Consumo de Energía (MWh)</label>
-                    <input type="range" id="simEnergy" min="100" max="2000" value="850" step="5">
-                    <span id="simEnergyVal">850 MWh</span>
-                </div>
-            </div>
 
-            <div class="dashboard-grid">
-                <div class="chart-card animate-on-scroll">
-                    <h3>Emisiones de Gases Invernadero</h3>
-                    <div class="chart-container">
-                        <canvas id="chartGhg"></canvas>
+                <!-- Contenido Principal del App -->
+                <div class="app-main-content">
+                    
+                    <!-- Panel de Calculadora / Settings -->
+                    <div class="app-card controls-card">
+                        <div class="app-card-header">
+                            <h3>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#28CA42" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+                                Parámetros de la Calculadora
+                            </h3>
+                        </div>
+                        <div class="dashboard-controls">
+                            <div class="control-group">
+                                <label for="simWaste">Residuos Generados (Ton)</label>
+                                <input type="range" id="simWaste" min="500" max="5000" value="1500" step="10">
+                                <span id="simWasteVal">1,500 Ton</span>
+                            </div>
+                            <div class="control-group">
+                                <label for="simRecycled">Material Reciclado (Ton)</label>
+                                <input type="range" id="simRecycled" min="0" max="5000" value="900" step="10">
+                                <span id="simRecycledVal">900 Ton</span>
+                            </div>
+                            <div class="control-group">
+                                <label for="simEnergy">Consumo de Energía (MWh)</label>
+                                <input type="range" id="simEnergy" min="100" max="2000" value="850" step="5">
+                                <span id="simEnergyVal">850 MWh</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="chart-card animate-on-scroll" data-delay="100">
-                    <h3>% de Residuos Domésticos</h3>
-                    <div class="chart-container">
-                        <canvas id="chartWaste"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card animate-on-scroll" data-delay="200">
-                    <h3>Uso de Energía por Combustible</h3>
-                    <div class="chart-container">
-                        <canvas id="chartEnergy"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card animate-on-scroll" data-delay="300">
-                    <h3>Estado de Camiones Recolectores</h3>
-                    <div class="chart-container">
-                        <canvas id="chartTrucks"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card animate-on-scroll" data-delay="400">
-                    <h3>Residuos vs Reciclaje</h3>
-                    <div class="chart-container">
-                        <canvas id="chartRecycling"></canvas>
-                    </div>
-                </div>
-                <div class="chart-card animate-on-scroll" data-delay="500">
-                    <h3>Disposición Final de Residuos</h3>
-                    <div class="chart-container">
-                        <canvas id="chartMaterials"></canvas>
+
+                    <!-- Canvas Grid -->
+                    <div class="dashboard-grid">
+                        <div class="chart-card">
+                            <h3>Emisiones Invernadero</h3>
+                            <div class="chart-container">
+                                <canvas id="chartGhg"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>% Residuos Orgánicos</h3>
+                            <div class="chart-container">
+                                <canvas id="chartWaste"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Uso de Energía</h3>
+                            <div class="chart-container">
+                                <canvas id="chartEnergy"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Estado de Flota</h3>
+                            <div class="chart-container">
+                                <canvas id="chartTrucks"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Residuos vs Reciclaje</h3>
+                            <div class="chart-container">
+                                <canvas id="chartRecycling"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <h3>Trazabilidad de Destino</h3>
+                            <div class="chart-container">
+                                <canvas id="chartMaterials"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

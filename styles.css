@@ -781,75 +781,195 @@ ul { list-style: none; }
     font-size: 0.95rem;
 }
 
-/* ========== DASHBOARD INTERACTIVO ========== */
+/* ========== DASHBOARD INTERACTIVO (APP LAYOUT) ========== */
 .dashboard-section {
     padding: 120px 0;
-    background: var(--dark-800);
+    background: var(--dark-900);
     position: relative;
     border-bottom: 1px solid rgba(255,255,255,0.04);
 }
-.dashboard-controls {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(37, 135, 80, 0.2);
-    padding: 30px;
-    border-radius: var(--radius-lg);
-    margin-bottom: 50px;
-    backdrop-filter: blur(10px);
+
+.app-ui-wrapper {
+    display: flex;
+    background: #0B120F; /* Dark background matching the image */
+    border: 1px solid rgba(40, 202, 66, 0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 30px rgba(40, 202, 66, 0.05);
+    min-height: 600px;
+    font-family: var(--font-main);
 }
-.control-group label {
-    display: block;
-    font-size: 0.95rem;
-    color: var(--gray-300);
-    margin-bottom: 12px;
-    font-weight: 600;
+
+.app-sidebar {
+    width: 65px;
+    background: #080D0A;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0;
+    flex-shrink: 0;
+    z-index: 5;
 }
-.control-group input[type="range"] {
+
+.app-logo-mini {
+    color: #28CA42;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 40px;
+}
+
+.app-sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     width: 100%;
-    accent-color: var(--green-400);
-    margin-bottom: 10px;
-    cursor: pointer;
 }
-.control-group span {
-    display: block;
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    color: var(--gold-400);
-    font-weight: 800;
-    text-align: right;
-}
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
-}
-.chart-card {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    backdrop-filter: blur(10px);
+
+.app-nav-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    color: #4A6354;
+    position: relative;
     transition: var(--transition);
 }
-.chart-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(37, 135, 80, 0.3);
-    box-shadow: var(--shadow-glow);
-}
-.chart-card h3 {
-    font-size: 1.05rem;
-    font-family: var(--font-display);
-    margin-bottom: 20px;
-    text-align: center;
+
+.app-nav-item:hover {
     color: var(--white);
-    font-weight: 600;
+    background: rgba(255,255,255,0.02);
 }
+
+.app-nav-item.active {
+    color: #28CA42;
+    background: rgba(40, 202, 66, 0.08);
+}
+
+.app-nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 50%;
+    background: #28CA42;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 0 10px rgba(40, 202, 66, 0.8);
+}
+
+.app-main-content {
+    flex-grow: 1;
+    padding: 24px;
+    background: #101914;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-x: hidden;
+}
+
+.app-card {
+    background: #14201A;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.app-card-header h3 {
+    font-size: 0.95rem;
+    color: var(--white);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.app-main-content .dashboard-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+}
+
+.app-main-content .control-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #6B8A78;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.app-main-content input[type="range"] {
+    width: 100%;
+    accent-color: #28CA42;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    appearance: none;
+    margin-bottom: 8px;
+}
+
+.app-main-content input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #28CA42;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(40, 202, 66, 0.5);
+    cursor: pointer;
+}
+
+.app-main-content .control-group span {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
+    text-align: right;
+}
+
+.app-main-content .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.app-main-content .chart-card {
+    background: #14201A;
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 12px;
+    padding: 20px;
+    transition: var(--transition);
+}
+
+.app-main-content .chart-card:hover {
+    border-color: rgba(40, 202, 66, 0.3);
+    box-shadow: 0 0 15px rgba(40, 202, 66, 0.05);
+}
+
+.app-main-content .chart-card h3 {
+    font-size: 0.85rem;
+    text-align: left;
+    color: var(--gray-300);
+    margin-bottom: 16px;
+    font-weight: 500;
+    font-family: var(--font-main);
+}
+
 .chart-container {
     position: relative;
-    height: 280px;
+    height: 240px;
     width: 100%;
+}
+
+@media (max-width: 768px) {
+    .app-ui-wrapper { flex-direction: column; }
+    .app-sidebar { width: 100%; height: 60px; flex-direction: row; justify-content: space-between; padding: 0 20px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .app-logo-mini { margin-bottom: 0; }
+    .app-sidebar-menu { flex-direction: row; gap: 10px; width: auto; }
+    .app-nav-item { width: 50px; height: 100%; }
+    .app-nav-item.active::before { width: 40%; height: 3px; left: 50%; top: auto; bottom: 0; transform: translateX(-50%); border-radius: 4px 4px 0 0; }
 }
 
 /* ========== FOOTER ========== */
