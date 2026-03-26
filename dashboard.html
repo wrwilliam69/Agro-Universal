@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Avanzado | Agro Universal — Control de Residuos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-900: #062B1E;  --green-800: #0B3D2E;  --green-700: #0F5132;
+      --green-600: #1A5C3A;  --green-500: #258750;  --green-400: #34A853;
+      --green-300: #5BBC73;  --green-200: #A8E6C1;  --green-100: #D4F5E0;
+      --gold-500: #C8A951;   --gold-400: #D4BA6A;
+      --dark-900: #0A0F0D;   --dark-800: #111A15;   --dark-700: #1A2620;
+      --dark-600: #243330;   --white: #FFFFFF;
+      --gray-100: #F5F7F6;   --gray-400: #9AABA1;   --gray-500: #6B7D73;
+      --accent: #28CA42;
+      --radius-sm: 8px;  --radius-md: 12px;  --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,.15);
+      --shadow-md: 0 8px 30px rgba(0,0,0,.2);
+      --font-main: 'Inter', -apple-system, sans-serif;
+      --font-display: 'Outfit', 'Inter', sans-serif;
+      --transition: .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: var(--font-main);
+      background: var(--dark-900);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: var(--dark-800);
+      border-bottom: 1px solid var(--dark-600);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-logo { display: flex; align-items: center; gap: 10px; }
+    .topbar-logo svg { width: 32px; height: 32px; color: var(--accent); }
+    .topbar-brand { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; }
+    .topbar-brand span { color: var(--gray-400); font-weight: 400; }
+    .topbar-divider { width: 1px; height: 24px; background: var(--dark-600); }
+    .topbar-title { font-size: .9rem; color: var(--gray-400); }
+    .topbar-actions { display: flex; gap: 10px; }
+    .btn-top {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--dark-600);
+      background: var(--dark-700);
+      color: var(--gray-400);
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-top:hover { background: var(--dark-600); color: var(--white); }
+    .btn-top.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-top.primary:hover { background: var(--green-300); }
+
+    /* TABS */
+    .tabs-bar {
+      background: var(--dark-800);
+      display: flex;
+      gap: 0;
+      padding: 0 28px;
+      border-bottom: 1px solid var(--dark-600);
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 12px 18px;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gray-500);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 3px solid transparent;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--green-200); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* MAIN */
+    .main { padding: 24px 28px; max-width: 1440px; margin: 0 auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* KPI ROW */
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-600);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      border-left: 4px solid var(--accent);
+    }
+    .kpi.gold { border-left-color: var(--gold-500); }
+    .kpi.blue { border-left-color: #1e88e5; }
+    .kpi.red  { border-left-color: #ef5350; }
+    .kpi-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .8px; color: var(--gray-500); margin-bottom: 4px; }
+    .kpi-val { font-size: 1.6rem; font-weight: 800; font-family: var(--font-display); }
+    .kpi-delta { font-size: .75rem; margin-top: 4px; }
+    .kpi-delta.good { color: var(--accent); }
+    .kpi-delta.warn { color: var(--gold-500); }
+
+    /* CHART GRID */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .card {
+      background: var(--dark-800);
+      border: 1px solid var(--dark-600);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+    .card-title { font-size: .88rem; font-weight: 700; margin-bottom: 2px; }
+    .card-sub { font-size: .72rem; color: var(--gray-500); margin-bottom: 14px; }
+    .chart-box { position: relative; height: 220px; }
+    .chart-box.tall { height: 280px; }
+    .span-full { grid-column: 1 / -1; }
+    .span-2 { grid-column: span 2; }
+
+    /* DATA ENTRY */
+    .entry-section { margin-bottom: 24px; }
+    .entry-section h3 {
+      font-size: .92rem; font-weight: 700;
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+      color: var(--green-200);
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .82rem;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 8px 10px;
+      background: var(--dark-700);
+      color: var(--gray-500);
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border: 1px solid var(--dark-600);
+    }
+    .data-table td {
+      padding: 4px 6px;
+      border: 1px solid var(--dark-600);
+    }
+    .data-table input {
+      width: 100%;
+      background: var(--dark-900);
+      border: 1px solid var(--dark-600);
+      color: var(--white);
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: .82rem;
+      font-family: var(--font-main);
+      transition: var(--transition);
+    }
+    .data-table input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(40,202,66,.2);
+    }
+    .data-table input:hover { border-color: var(--green-600); }
+    .data-table .row-label {
+      color: var(--gray-400);
+      font-weight: 500;
+      padding: 8px 10px;
+      white-space: nowrap;
+    }
+    .add-row-btn {
+      margin-top: 8px;
+      padding: 6px 14px;
+      font-size: .78rem;
+      background: var(--dark-700);
+      border: 1px dashed var(--dark-600);
+      color: var(--gray-400);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .add-row-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* FORM INLINE INPUTS */
+    .inline-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .input-group { display: flex; flex-direction: column; gap: 4px; }
+    .input-group label { font-size: .72rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: .5px; }
+    .input-group input, .input-group select {
+      background: var(--dark-900);
+      border: 1px solid var(--dark-600);
+      color: var(--white);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: .85rem;
+      font-family: var(--font-main);
+      transition: var(--transition);
+    }
+    .input-group input:focus, .input-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(40,202,66,.2);
+    }
+
+    /* ACTION BUTTONS */
+    .action-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn {
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--dark-600);
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-save   { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-save:hover { background: var(--green-300); }
+    .btn-load   { background: var(--dark-700); color: var(--gray-400); }
+    .btn-load:hover { background: var(--dark-600); color: var(--white); }
+    .btn-export { background: var(--dark-700); color: var(--gold-500); border-color: var(--gold-500); }
+    .btn-export:hover { background: rgba(200,169,81,.15); }
+    .btn-demo   { background: var(--green-700); color: var(--green-200); border-color: var(--green-600); }
+    .btn-demo:hover { background: var(--green-600); }
+    .btn-aws    { background: #1a237e; color: #90caf9; border-color: #283593; }
+    .btn-aws:hover { background: #283593; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--dark-800); border: 1px solid var(--accent);
+      color: var(--accent); padding: 14px 24px;
+      border-radius: var(--radius-md);
+      font-size: .85rem; font-weight: 600;
+      box-shadow: var(--shadow-md);
+      transform: translateY(80px); opacity: 0;
+      transition: all .4s ease;
+      z-index: 1000;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* CALCULATOR */
+    .calc-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .calc-row label { flex: 1; font-size: .84rem; color: var(--gray-400); }
+    .calc-row input[type=number] {
+      width: 100px;
+      background: var(--dark-900);
+      border: 1px solid var(--dark-600);
+      color: var(--accent);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      font-size: .9rem;
+      font-weight: 700;
+      text-align: right;
+      font-family: var(--font-display);
+    }
+    .calc-row input[type=number]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(40,202,66,.2);
+    }
+    .calc-row input[type=range] { flex: 2; accent-color: var(--accent); }
+    .calc-row .unit { width: 30px; font-size: .72rem; color: var(--gray-500); }
+    .co2-result {
+      background: linear-gradient(135deg, var(--green-900), var(--dark-800));
+      border: 1px solid var(--green-600);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .co2-result-num { font-size: 3rem; font-weight: 900; color: var(--accent); font-family: var(--font-display); }
+    .co2-result-label { font-size: .85rem; color: var(--gray-400); margin-top: 4px; }
+    .co2-equivs { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 16px; }
+    .co2-equiv-item {
+      background: var(--dark-700);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      text-align: center;
+    }
+    .co2-equiv-val { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+    .co2-equiv-lbl { font-size: .7rem; color: var(--gray-500); margin-top: 2px; }
+    .co2-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: .8rem; }
+    .co2-bar-lbl { width: 80px; text-align: right; color: var(--gray-500); flex-shrink: 0; }
+    .co2-bar-track { flex: 1; background: var(--dark-700); border-radius: 4px; height: 10px; overflow: hidden; }
+    .co2-bar-fill { height: 100%; border-radius: 4px; transition: width .5s; }
+    .co2-bar-val { width: 55px; font-weight: 600; }
+
+    /* GOALS TABLE */
+    .goal-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .goal-table th {
+      text-align: left; padding: 8px 12px;
+      background: var(--dark-700); color: var(--gray-500);
+      font-size: .72rem; text-transform: uppercase; letter-spacing: .5px;
+      border: 1px solid var(--dark-600);
+    }
+    .goal-table td { padding: 10px 12px; border: 1px solid var(--dark-600); }
+    .progress-track { background: var(--dark-700); border-radius: 4px; height: 8px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: .7rem; font-weight: 700; }
+    .badge-green  { background: rgba(40,202,66,.15); color: var(--accent); }
+    .badge-yellow { background: rgba(200,169,81,.15); color: var(--gold-500); }
+    .badge-red    { background: rgba(239,83,80,.15); color: #ef5350; }
+
+    /* LEGEND */
+    .legend-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: .72rem; color: var(--gray-400); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* TRUCKS */
+    .truck-stats { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 14px; }
+    .truck-stat { flex: 1; min-width: 100px; background: var(--dark-700); border-radius: var(--radius-sm); padding: 14px; text-align: center; }
+    .truck-stat-val { font-size: 1.4rem; font-weight: 800; color: var(--accent); font-family: var(--font-display); }
+    .truck-stat-lbl { font-size: .7rem; color: var(--gray-500); margin-top: 2px; }
+
+    /* API STATUS */
+    .api-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .75rem; padding: 4px 10px;
+      border-radius: 12px; background: var(--dark-700);
+    }
+    .api-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .api-dot.online { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+    .api-dot.offline { background: #ef5350; }
+
+    @media (max-width: 900px) {
+      .grid-3, .grid-2, .grid-2-1 { grid-template-columns: 1fr; }
+      .span-2 { grid-column: span 1; }
+      .main { padding: 16px; }
+      .topbar { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+      .tabs-bar { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2"/>
+        <path d="M20 8 C14 14, 10 20, 14 26 C16 30, 24 30, 26 26 C30 20, 26 14, 20 8Z" fill="currentColor" opacity="0.3"/>
+        <path d="M16 18 C18 16, 22 16, 24 18 L22 24 C21 26, 19 26, 18 24Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="topbar-brand">AGRO <span>UNIVERSAL</span></div>
+    <div class="topbar-divider"></div>
+    <div class="topbar-title">Dashboard Avanzado de Residuos</div>
+  </div>
+  <div class="topbar-actions">
+    <div class="api-status" id="apiStatus">
+      <div class="api-dot offline" id="apiDot"></div>
+      <span id="apiLabel">API: Desconectada</span>
+    </div>
+    <a href="index.html" class="btn-top"><i class="fa fa-arrow-left"></i> Volver al Inicio</a>
+    <button class="btn-top primary" onclick="saveAllData()"><i class="fa fa-save"></i> Guardar</button>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-bar">
+  <button class="tab-btn active" onclick="switchTab('data',this)"><i class="fa fa-keyboard"></i> Ingresar Datos</button>
+  <button class="tab-btn" onclick="switchTab('overview',this)"><i class="fa fa-chart-line"></i> Resumen</button>
+  <button class="tab-btn" onclick="switchTab('emissions',this)"><i class="fa fa-smog"></i> Emisiones GHG</button>
+  <button class="tab-btn" onclick="switchTab('recycling',this)"><i class="fa fa-recycle"></i> Reciclaje</button>
+  <button class="tab-btn" onclick="switchTab('trucks',this)"><i class="fa fa-truck"></i> Flota</button>
+  <button class="tab-btn" onclick="switchTab('calculator',this)"><i class="fa fa-calculator"></i> Calculadora CO2</button>
+  <button class="tab-btn" onclick="switchTab('goals',this)"><i class="fa fa-bullseye"></i> Metas</button>
+</div>
+
+<div class="main">
+
+<!-- ===== TAB: DATA ENTRY ===== -->
+<div id="tab-data" class="tab-panel active">
+
+  <div class="action-bar">
+    <button class="btn btn-save" onclick="saveAllData()"><i class="fa fa-save"></i> Guardar Todo</button>
+    <button class="btn btn-demo" onclick="loadDemoData()"><i class="fa fa-flask"></i> Cargar Datos Demo</button>
+    <button class="btn btn-export" onclick="exportCSV()"><i class="fa fa-download"></i> Exportar CSV</button>
+    <button class="btn btn-load" onclick="importCSV()"><i class="fa fa-upload"></i> Importar CSV</button>
+    <button class="btn btn-aws" onclick="syncAWS()"><i class="fa fa-cloud-upload-alt"></i> Sincronizar AWS</button>
+    <input type="file" id="csvInput" accept=".csv" style="display:none" onchange="handleCSVImport(event)">
+  </div>
+
+  <!-- GHG Data -->
+  <div class="entry-section">
+    <h3><i class="fa fa-smog"></i> Emisiones de Gases de Efecto Invernadero (GHG)</h3>
+    <div class="card">
+      <table class="data-table" id="tbl-ghg">
+        <thead><tr><th>Ano</th><th>Mill. ton CO2 eq.</th><th></th></tr></thead>
+        <tbody id="tbody-ghg"></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addGHGRow()"><i class="fa fa-plus"></i> Agregar ano</button>
+    </div>
+  </div>
+
+  <!-- Waste & Recycling Data -->
+  <div class="entry-section">
+    <h3><i class="fa fa-recycle"></i> Residuos y Reciclaje por Ano</h3>
+    <div class="card">
+      <table class="data-table" id="tbl-wr">
+        <thead><tr><th>Ano</th><th>Residuo Solido (ton)</th><th>Reciclado (ton)</th><th>Compostado (ton)</th><th></th></tr></thead>
+        <tbody id="tbody-wr"></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addWRRow()"><i class="fa fa-plus"></i> Agregar ano</button>
+    </div>
+  </div>
+
+  <!-- Materials -->
+  <div class="entry-section">
+    <h3><i class="fa fa-layer-group"></i> Composicion de Materiales (%)</h3>
+    <div class="card">
+      <div class="inline-inputs" id="materials-inputs"></div>
+      <div style="font-size:.75rem;color:var(--gray-500)" id="mat-total">Total: 0%</div>
+    </div>
+  </div>
+
+  <!-- Energy -->
+  <div class="entry-section">
+    <h3><i class="fa fa-bolt"></i> Uso de Energia por Tipo de Combustible (%)</h3>
+    <div class="card">
+      <div class="inline-inputs" id="energy-inputs"></div>
+      <div style="font-size:.75rem;color:var(--gray-500)" id="energy-total">Total: 0%</div>
+    </div>
+  </div>
+
+  <!-- Trucks -->
+  <div class="entry-section">
+    <h3><i class="fa fa-truck"></i> Flota de Camiones</h3>
+    <div class="card">
+      <div class="inline-inputs">
+        <div class="input-group">
+          <label>Total Camiones Activos</label>
+          <input type="number" id="trucks-total" value="0" onchange="onDataChange()">
+        </div>
+        <div class="input-group">
+          <label>Rutas Completadas</label>
+          <input type="number" id="trucks-completed" value="0" onchange="onDataChange()">
+        </div>
+        <div class="input-group">
+          <label>En Movimiento</label>
+          <input type="number" id="trucks-moving" value="0" onchange="onDataChange()">
+        </div>
+        <div class="input-group">
+          <label>En Espera</label>
+          <input type="number" id="trucks-idle" value="0" onchange="onDataChange()">
+        </div>
+        <div class="input-group">
+          <label>Contenedores Registrados</label>
+          <input type="number" id="trucks-bins" value="0" onchange="onDataChange()">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Household Waste Regions -->
+  <div class="entry-section">
+    <h3><i class="fa fa-globe-americas"></i> % Residuo Domestico por Region</h3>
+    <div class="card">
+      <table class="data-table" id="tbl-regions">
+        <thead><tr><th>Region / Pais</th><th>% Residuo Domestico</th><th></th></tr></thead>
+        <tbody id="tbody-regions"></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addRegionRow()"><i class="fa fa-plus"></i> Agregar region</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== TAB: OVERVIEW ===== -->
+<div id="tab-overview" class="tab-panel">
+  <div class="kpi-row" id="overview-kpis"></div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">Emisiones GHG (Mill. ton CO2 eq.)</div>
+      <div class="card-sub">Evolucion anual</div>
+      <div class="chart-box"><canvas id="c-ghg"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">% Residuo Domestico por Region</div>
+      <div class="card-sub">Comparativo</div>
+      <div class="chart-box"><canvas id="c-household"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Uso de Energia por Combustible</div>
+      <div class="card-sub" id="energy-total-label">Total: -- PJ</div>
+      <div class="chart-box"><canvas id="c-energy"></canvas></div>
+    </div>
+  </div>
+  <div class="grid-2-1">
+    <div class="card">
+      <div class="card-title">Residuos y Reciclaje por Ano</div>
+      <div class="card-sub">Toneladas + % reciclado</div>
+      <div class="chart-box tall"><canvas id="c-wr"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Materiales en Flujo de Residuos</div>
+      <div class="card-sub">Distribucion 2024</div>
+      <div class="chart-box"><canvas id="c-materials"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: EMISSIONS ===== -->
+<div id="tab-emissions" class="tab-panel">
+  <div class="kpi-row" id="emissions-kpis"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Tendencia GHG</div>
+      <div class="card-sub">Millones de toneladas CO2 equivalente</div>
+      <div class="chart-box tall"><canvas id="c-ghg-detail"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">CO2 Ahorrado por Tipo de Reciclaje</div>
+      <div class="card-sub">Toneladas CO2 eq. evitadas</div>
+      <div class="chart-box tall"><canvas id="c-co2saved"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: RECYCLING ===== -->
+<div id="tab-recycling" class="tab-panel">
+  <div class="kpi-row" id="recycling-kpis"></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Evolucion Reciclaje, Compostaje y Relleno</div>
+    <div class="card-sub">Porcentaje del total</div>
+    <div class="chart-box tall"><canvas id="c-rectrend"></canvas></div>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">Materiales 2024</div>
+      <div class="chart-box"><canvas id="c-mat2"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Tasa de Reciclaje por Material</div>
+      <div class="card-sub">% real vs meta 2030</div>
+      <div class="chart-box"><canvas id="c-recrate"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Generado vs Reciclado</div>
+      <div class="card-sub">Toneladas</div>
+      <div class="chart-box"><canvas id="c-genvsrec"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: TRUCKS ===== -->
+<div id="tab-trucks" class="tab-panel">
+  <div class="kpi-row" id="trucks-kpis"></div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Estado de Flota</div>
+      <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:12px">
+        <div style="width:180px;height:180px;position:relative"><canvas id="c-truckdonut"></canvas></div>
+        <div class="legend-row" id="truck-legend" style="flex-direction:column"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Contenedores Registrados</div>
+      <div class="truck-stats" id="truck-bins-display"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: CALCULATOR ===== -->
+<div id="tab-calculator" class="tab-panel">
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><i class="fa fa-calculator" style="color:var(--accent)"></i> Calculadora de Huella de Carbono Evitada</div>
+      <div class="card-sub">Escribe las toneladas recicladas por material. Factores IPCC/EPA.</div>
+      <div id="calc-inputs"></div>
+      <div class="co2-result" id="co2-result">
+        <div class="co2-result-num" id="co2-total">0</div>
+        <div class="co2-result-label">toneladas CO2 equivalente evitadas</div>
+      </div>
+      <div class="co2-equivs" id="co2-equivs"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="fa fa-chart-bar" style="color:#1e88e5"></i> Desglose por Material</div>
+      <div id="co2-bars"></div>
+      <div class="chart-box" style="margin-top:16px"><canvas id="c-co2pie"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: GOALS ===== -->
+<div id="tab-goals" class="tab-panel">
+  <div class="kpi-row" id="goals-kpis"></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Progreso hacia Metas Zero Waste</div>
+    <div style="overflow-x:auto;margin-top:14px">
+      <table class="goal-table">
+        <thead><tr><th>Indicador</th><th>Actual</th><th>Meta</th><th>Progreso</th><th>Estado</th></tr></thead>
+        <tbody id="goals-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Proyeccion Tasa de Reciclaje 2030</div>
+      <div class="chart-box tall"><canvas id="c-proj"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reduccion GHG Proyectada 2030</div>
+      <div class="chart-box tall"><canvas id="c-ghgproj"></canvas></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ====================================================
+// DATA MODEL — single source of truth
+// ====================================================
+const API_BASE = 'https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod';
+
+let D = {
+  ghg: [],          // [{year, value}]
+  wr: [],           // [{year, solid, recycled, composted}]
+  materials: [],    // [{name, pct}]
+  energy: [],       // [{name, pct}]
+  trucks: { total:0, completed:0, moving:0, idle:0, bins:0 },
+  regions: [],      // [{name, pct}]
+};
+
+// ---- MATERIAL & ENERGY defaults ----
+const MAT_DEFAULTS = ['Alimentos','Papel/Carton','Plasticos','Metales','Vidrio','Madera','Textiles','Otros'];
+const ENE_DEFAULTS = ['Gas Natural','Gasolina','Petroleo','Renovable','Biomasa','Otros'];
+
+// ---- CO2 factors (ton CO2 / ton recycled) ----
+const CO2F = {paper:3.16, plastic:1.50, metal:9.10, glass:0.31, organic:0.50, ewaste:8.00};
+const CO2_KEYS   = ['paper','plastic','metal','glass','organic','ewaste'];
+const CO2_LABELS = ['Papel/Carton','Plasticos','Metales','Vidrio','Organico','E-waste'];
+const CO2_COLORS = ['#1e88e5','#ff9800','#90a4ae','#00acc1','#28CA42','#9c27b0'];
+
+// ====================================================
+// CHARTS store
+// ====================================================
+let charts = {};
+
+// ====================================================
+// TAB SWITCHING
+// ====================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  renderAll();
+}
+
+// ====================================================
+// TOAST
+// ====================================================
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ====================================================
+// BUILD FORMS
+// ====================================================
+function buildForms() {
+  // GHG
+  const gBody = document.getElementById('tbody-ghg');
+  gBody.innerHTML = D.ghg.map((r,i) => `<tr>
+    <td><input type="number" value="${r.year}" onchange="D.ghg[${i}].year=+this.value;onDataChange()"></td>
+    <td><input type="number" step="0.1" value="${r.value}" onchange="D.ghg[${i}].value=+this.value;onDataChange()"></td>
+    <td><button class="add-row-btn" onclick="D.ghg.splice(${i},1);buildForms();onDataChange()" style="color:#ef5350;border-color:#ef5350">x</button></td>
+  </tr>`).join('');
+
+  // WR
+  const wBody = document.getElementById('tbody-wr');
+  wBody.innerHTML = D.wr.map((r,i) => `<tr>
+    <td><input type="number" value="${r.year}" onchange="D.wr[${i}].year=+this.value;onDataChange()"></td>
+    <td><input type="number" value="${r.solid}" onchange="D.wr[${i}].solid=+this.value;onDataChange()"></td>
+    <td><input type="number" value="${r.recycled}" onchange="D.wr[${i}].recycled=+this.value;onDataChange()"></td>
+    <td><input type="number" value="${r.composted}" onchange="D.wr[${i}].composted=+this.value;onDataChange()"></td>
+    <td><button class="add-row-btn" onclick="D.wr.splice(${i},1);buildForms();onDataChange()" style="color:#ef5350;border-color:#ef5350">x</button></td>
+  </tr>`).join('');
+
+  // Materials
+  const mDiv = document.getElementById('materials-inputs');
+  mDiv.innerHTML = D.materials.map((m,i) => `<div class="input-group">
+    <label>${m.name}</label>
+    <input type="number" step="0.1" value="${m.pct}" onchange="D.materials[${i}].pct=+this.value;updateMatTotal();onDataChange()">
+  </div>`).join('');
+  updateMatTotal();
+
+  // Energy
+  const eDiv = document.getElementById('energy-inputs');
+  eDiv.innerHTML = D.energy.map((e,i) => `<div class="input-group">
+    <label>${e.name}</label>
+    <input type="number" step="0.1" value="${e.pct}" onchange="D.energy[${i}].pct=+this.value;updateEnergyTotal();onDataChange()">
+  </div>`).join('');
+  updateEnergyTotal();
+
+  // Trucks
+  document.getElementById('trucks-total').value = D.trucks.total;
+  document.getElementById('trucks-completed').value = D.trucks.completed;
+  document.getElementById('trucks-moving').value = D.trucks.moving;
+  document.getElementById('trucks-idle').value = D.trucks.idle;
+  document.getElementById('trucks-bins').value = D.trucks.bins;
+
+  // Regions
+  const rBody = document.getElementById('tbody-regions');
+  rBody.innerHTML = D.regions.map((r,i) => `<tr>
+    <td><input type="text" value="${r.name}" onchange="D.regions[${i}].name=this.value;onDataChange()"></td>
+    <td><input type="number" step="0.1" value="${r.pct}" onchange="D.regions[${i}].pct=+this.value;onDataChange()"></td>
+    <td><button class="add-row-btn" onclick="D.regions.splice(${i},1);buildForms();onDataChange()" style="color:#ef5350;border-color:#ef5350">x</button></td>
+  </tr>`).join('');
+}
+
+function updateMatTotal() {
+  const t = D.materials.reduce((s,m) => s + m.pct, 0);
+  document.getElementById('mat-total').textContent = `Total: ${t.toFixed(1)}%`;
+  document.getElementById('mat-total').style.color = Math.abs(t-100) < 0.5 ? 'var(--accent)' : '#ef5350';
+}
+function updateEnergyTotal() {
+  const t = D.energy.reduce((s,e) => s + e.pct, 0);
+  document.getElementById('energy-total').textContent = `Total: ${t.toFixed(1)}%`;
+  document.getElementById('energy-total').style.color = Math.abs(t-100) < 0.5 ? 'var(--accent)' : '#ef5350';
+}
+
+// Add rows
+function addGHGRow() {
+  const lastY = D.ghg.length ? D.ghg[D.ghg.length-1].year + 1 : new Date().getFullYear();
+  D.ghg.push({year: lastY, value: 0});
+  buildForms();
+}
+function addWRRow() {
+  const lastY = D.wr.length ? D.wr[D.wr.length-1].year + 1 : new Date().getFullYear();
+  D.wr.push({year: lastY, solid:0, recycled:0, composted:0});
+  buildForms();
+}
+function addRegionRow() {
+  D.regions.push({name: 'Nueva Region', pct: 0});
+  buildForms();
+}
+
+// Read trucks from form
+function readTrucks() {
+  D.trucks.total     = +document.getElementById('trucks-total').value;
+  D.trucks.completed = +document.getElementById('trucks-completed').value;
+  D.trucks.moving    = +document.getElementById('trucks-moving').value;
+  D.trucks.idle      = +document.getElementById('trucks-idle').value;
+  D.trucks.bins      = +document.getElementById('trucks-bins').value;
+}
+
+function onDataChange() {
+  readTrucks();
+  saveLocal();
+  renderAll();
+}
+
+// ====================================================
+// PERSISTENCE — localStorage
+// ====================================================
+function saveLocal() {
+  localStorage.setItem('wm-dashboard-data', JSON.stringify(D));
+}
+function loadLocal() {
+  const raw = localStorage.getItem('wm-dashboard-data');
+  if (raw) {
+    try { D = JSON.parse(raw); } catch(e) { /* ignore */ }
+  }
+}
+
+function saveAllData() {
+  readTrucks();
+  saveLocal();
+  renderAll();
+  toast('Datos guardados localmente');
+}
+
+// ====================================================
+// AWS SYNC
+// ====================================================
+async function syncAWS() {
+  readTrucks();
+  const dot = document.getElementById('apiDot');
+  const lbl = document.getElementById('apiLabel');
+  try {
+    const res = await fetch(API_BASE + '/dashboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'save', data: D })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    dot.className = 'api-dot online';
+    lbl.textContent = 'API: Conectada';
+    toast('Datos sincronizados con AWS');
+  } catch(err) {
+    dot.className = 'api-dot offline';
+    lbl.textContent = 'API: Error';
+    toast('Error AWS: ' + err.message + ' — Se requiere crear el endpoint /dashboard en API Gateway');
+  }
+}
+
+async function loadFromAWS() {
+  try {
+    const res = await fetch(API_BASE + '/dashboard?action=load');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.data) {
+      D = json.data;
+      buildForms();
+      renderAll();
+      document.getElementById('apiDot').className = 'api-dot online';
+      document.getElementById('apiLabel').textContent = 'API: Conectada';
+      toast('Datos cargados desde AWS');
+    }
+  } catch(err) {
+    // silently fall back to local
+  }
+}
+
+// ====================================================
+// CSV EXPORT / IMPORT
+// ====================================================
+function exportCSV() {
+  let csv = 'SECCION,CAMPO1,CAMPO2,CAMPO3,CAMPO4\n';
+  csv += '--- GHG ---,,,,\n';
+  D.ghg.forEach(r => csv += `GHG,${r.year},${r.value},,\n`);
+  csv += '--- RESIDUOS ---,,,,\n';
+  D.wr.forEach(r => csv += `WR,${r.year},${r.solid},${r.recycled},${r.composted}\n`);
+  csv += '--- MATERIALES ---,,,,\n';
+  D.materials.forEach(m => csv += `MAT,${m.name},${m.pct},,\n`);
+  csv += '--- ENERGIA ---,,,,\n';
+  D.energy.forEach(e => csv += `ENE,${e.name},${e.pct},,\n`);
+  csv += '--- CAMIONES ---,,,,\n';
+  csv += `TRUCKS,${D.trucks.total},${D.trucks.completed},${D.trucks.moving},${D.trucks.idle}\n`;
+  csv += `BINS,${D.trucks.bins},,,\n`;
+  csv += '--- REGIONES ---,,,,\n';
+  D.regions.forEach(r => csv += `REG,${r.name},${r.pct},,\n`);
+
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dashboard_data_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  toast('CSV exportado');
+}
+
+function importCSV() { document.getElementById('csvInput').click(); }
+
+function handleCSVImport(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    const lines = ev.target.result.split('\n');
+    D.ghg = []; D.wr = []; D.materials = []; D.energy = []; D.regions = [];
+    lines.forEach(line => {
+      const cols = line.split(',').map(c => c.trim());
+      if (cols[0] === 'GHG') D.ghg.push({year:+cols[1], value:+cols[2]});
+      else if (cols[0] === 'WR') D.wr.push({year:+cols[1], solid:+cols[2], recycled:+cols[3], composted:+cols[4]});
+      else if (cols[0] === 'MAT') D.materials.push({name:cols[1], pct:+cols[2]});
+      else if (cols[0] === 'ENE') D.energy.push({name:cols[1], pct:+cols[2]});
+      else if (cols[0] === 'TRUCKS') { D.trucks.total=+cols[1]; D.trucks.completed=+cols[2]; D.trucks.moving=+cols[3]; D.trucks.idle=+cols[4]; }
+      else if (cols[0] === 'BINS') D.trucks.bins = +cols[1];
+      else if (cols[0] === 'REG') D.regions.push({name:cols[1], pct:+cols[2]});
+    });
+    buildForms();
+    saveLocal();
+    renderAll();
+    toast('CSV importado');
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ====================================================
+// DEMO DATA
+// ====================================================
+function loadDemoData() {
+  D.ghg = [
+    {year:2014,value:72.5},{year:2015,value:75.6},{year:2016,value:74.6},{year:2017,value:70.9},
+    {year:2018,value:69.6},{year:2019,value:68.2},{year:2020,value:66.8},{year:2021,value:67.5},
+    {year:2022,value:70.1},{year:2023,value:71.0},{year:2024,value:69.6}
+  ];
+  D.wr = [];
+  for(let y=2014; y<=2024; y++) {
+    const i = y - 2014;
+    D.wr.push({year:y, solid: 2500-i*15, recycled: 920+i*25, composted: 370+i*22});
+  }
+  D.materials = [
+    {name:'Alimentos',pct:22},{name:'Papel/Carton',pct:15},{name:'Plasticos',pct:18},
+    {name:'Metales',pct:10},{name:'Vidrio',pct:6},{name:'Madera',pct:9},
+    {name:'Textiles',pct:12},{name:'Otros',pct:8}
+  ];
+  D.energy = [
+    {name:'Gas Natural',pct:32},{name:'Gasolina',pct:18},{name:'Petroleo',pct:17},
+    {name:'Renovable',pct:20},{name:'Biomasa',pct:8},{name:'Otros',pct:5}
+  ];
+  D.trucks = {total:314, completed:624, moving:210, idle:42, bins:420};
+  D.regions = [
+    {name:'Alemania',pct:32},{name:'Espana',pct:38},{name:'Francia',pct:42},
+    {name:'Italia',pct:45},{name:'Colombia',pct:48},{name:'Brasil',pct:52},
+    {name:'Mexico',pct:55},{name:'EE.UU.',pct:58},{name:'Argentina',pct:61}
+  ];
+  buildForms();
+  saveLocal();
+  renderAll();
+  toast('Datos demo cargados');
+}
+
+// ====================================================
+// RENDER ALL CHARTS + KPIs
+// ====================================================
+const C = (id) => document.getElementById(id);
+const gridColor = 'rgba(255,255,255,0.05)';
+const GC = {green:'#28CA42',dark:'#0F2A1A',gold:'#C8A951',blue:'#1e88e5',red:'#ef5350',gray:'#6B7D73'};
+const GREENS = ['#28CA42','#1A5C3A','#0F5132','#14592B','#0B3D2E','#062B1E','#34A853','#5BBC73'];
+
+function destroyChart(key) { if(charts[key]) { charts[key].destroy(); delete charts[key]; } }
+
+function renderAll() {
+  readTrucks();
+  renderOverview();
+  renderEmissions();
+  renderRecycling();
+  renderTrucks();
+  renderCalc();
+  renderGoals();
+}
+
+// ---- OVERVIEW ----
+function renderOverview() {
+  // KPIs
+  const lastGhg = D.ghg.length ? D.ghg[D.ghg.length-1] : null;
+  const lastWR  = D.wr.length  ? D.wr[D.wr.length-1]   : null;
+  const recRate = lastWR && lastWR.solid ? ((lastWR.recycled/lastWR.solid)*100).toFixed(1) : '--';
+  const kpis = C('overview-kpis');
+  kpis.innerHTML = `
+    <div class="kpi"><div class="kpi-label">Tasa de Reciclaje</div><div class="kpi-val">${recRate}%</div></div>
+    <div class="kpi blue"><div class="kpi-label">GHG Ultimo Ano</div><div class="kpi-val">${lastGhg ? lastGhg.value+'M' : '--'}</div></div>
+    <div class="kpi gold"><div class="kpi-label">Camiones Activos</div><div class="kpi-val">${D.trucks.total}</div></div>
+    <div class="kpi"><div class="kpi-label">Residuo Solido/Ano</div><div class="kpi-val">${lastWR ? lastWR.solid.toLocaleString()+'t' : '--'}</div></div>
+    <div class="kpi blue"><div class="kpi-label">Contenedores</div><div class="kpi-val">${D.trucks.bins}</div></div>
+  `;
+
+  // GHG bar
+  destroyChart('ghg');
+  if(D.ghg.length) {
+    charts.ghg = new Chart(C('c-ghg'), {
+      type:'bar', data:{ labels:D.ghg.map(r=>r.year), datasets:[{
+        data:D.ghg.map(r=>r.value), backgroundColor:GC.green, borderRadius:4
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{y:{grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+    });
+  }
+
+  // Household bar
+  destroyChart('household');
+  if(D.regions.length) {
+    charts.household = new Chart(C('c-household'), {
+      type:'bar', data:{ labels:D.regions.map(r=>r.name), datasets:[{
+        data:D.regions.map(r=>r.pct), backgroundColor:GREENS, borderRadius:4
+      }]},
+      options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{x:{min:0,max:70,grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},y:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+    });
+  }
+
+  // Energy donut
+  destroyChart('energy');
+  if(D.energy.length) {
+    charts.energy = new Chart(C('c-energy'), {
+      type:'doughnut', data:{ labels:D.energy.map(e=>e.name), datasets:[{
+        data:D.energy.map(e=>e.pct), backgroundColor:['#1e88e5','#28CA42','#ff9800','#9c27b0','#00acc1','#90a4ae','#ef5350'],
+        borderWidth:0
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{color:'#9AABA1',font:{size:10},boxWidth:10}}}}
+    });
+  }
+
+  // WR combo
+  destroyChart('wr');
+  if(D.wr.length) {
+    const pctR = D.wr.map(r => r.solid ? +((r.recycled/r.solid)*100).toFixed(1) : 0);
+    charts.wr = new Chart(C('c-wr'), {
+      type:'bar', data:{ labels:D.wr.map(r=>r.year), datasets:[
+        {label:'Residuo Solido', data:D.wr.map(r=>r.solid), backgroundColor:GC.dark, borderRadius:2},
+        {label:'Reciclado',      data:D.wr.map(r=>r.recycled), backgroundColor:GC.green, borderRadius:2},
+        {label:'Compostado',     data:D.wr.map(r=>r.composted), backgroundColor:GC.gold, borderRadius:2},
+        {label:'% Reciclado',    data:pctR, type:'line', borderColor:'#9c27b0', yAxisID:'y1', tension:.4, pointRadius:3, borderWidth:2}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10},boxWidth:10}}},
+        scales:{
+          y:{grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},
+          y1:{position:'right',min:0,max:80,grid:{drawOnChartArea:false},ticks:{color:'#9AABA1',font:{size:10},callback:v=>v+'%'}},
+          x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}
+        }}
+    });
+  }
+
+  // Materials donut
+  destroyChart('materials');
+  if(D.materials.length) {
+    charts.materials = new Chart(C('c-materials'), {
+      type:'doughnut', data:{ labels:D.materials.map(m=>m.name), datasets:[{
+        data:D.materials.map(m=>m.pct),
+        backgroundColor:['#ef5350','#1e88e5','#ff9800','#90a4ae','#00acc1','#8d6e63','#9c27b0','#cfd8dc'],
+        borderWidth:0
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{color:'#9AABA1',font:{size:10},boxWidth:10}}}}
+    });
+  }
+}
+
+// ---- EMISSIONS ----
+function renderEmissions() {
+  const firstGhg = D.ghg.length ? D.ghg[0].value : 0;
+  const lastGhg  = D.ghg.length ? D.ghg[D.ghg.length-1].value : 0;
+  const reduction = firstGhg ? (((firstGhg - lastGhg) / firstGhg) * 100).toFixed(1) : '--';
+
+  C('emissions-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Reduccion GHG vs primer ano</div><div class="kpi-val">${reduction}%</div></div>
+    <div class="kpi blue"><div class="kpi-label">GHG Ultimo Ano</div><div class="kpi-val">${lastGhg}M</div></div>
+  `;
+
+  destroyChart('ghgDetail');
+  if(D.ghg.length) {
+    charts.ghgDetail = new Chart(C('c-ghg-detail'), {
+      type:'line', data:{ labels:D.ghg.map(r=>r.year), datasets:[
+        {label:'GHG real', data:D.ghg.map(r=>r.value), borderColor:GC.red, backgroundColor:'rgba(239,83,80,.1)', tension:.4, fill:true, pointRadius:4, borderWidth:2},
+        {label:'Meta lineal', data:D.ghg.map((_,i) => +(firstGhg - i*(firstGhg-60)/(D.ghg.length+5)).toFixed(1)),
+         borderColor:GC.green, borderDash:[6,4], pointRadius:0, borderWidth:2, fill:false}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10}}}},
+        scales:{y:{grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+    });
+  }
+
+  // CO2 saved per material (calculated from last year recycling)
+  destroyChart('co2saved');
+  const lastWR = D.wr.length ? D.wr[D.wr.length-1] : null;
+  if(lastWR) {
+    const paperR   = lastWR.recycled * 0.3; // rough split
+    const plasticR = lastWR.recycled * 0.2;
+    const metalR   = lastWR.recycled * 0.15;
+    const glassR   = lastWR.recycled * 0.1;
+    const orgR     = lastWR.composted;
+    const saved = [paperR*CO2F.paper, plasticR*CO2F.plastic, metalR*CO2F.metal, glassR*CO2F.glass, orgR*CO2F.organic].map(v=>+v.toFixed(0));
+    charts.co2saved = new Chart(C('c-co2saved'), {
+      type:'bar', data:{ labels:['Papel','Plastico','Metal','Vidrio','Organico'], datasets:[{
+        data:saved, backgroundColor:GREENS, borderRadius:6
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+        scales:{y:{grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+    });
+  }
+}
+
+// ---- RECYCLING ----
+function renderRecycling() {
+  const lastWR = D.wr.length ? D.wr[D.wr.length-1] : null;
+  const recRate  = lastWR && lastWR.solid ? ((lastWR.recycled/lastWR.solid)*100).toFixed(1) : '--';
+  const compRate = lastWR && lastWR.solid ? ((lastWR.composted/lastWR.solid)*100).toFixed(1) : '--';
+  const landRate = lastWR && lastWR.solid ? ((1 - lastWR.recycled/lastWR.solid - lastWR.composted/lastWR.solid)*100).toFixed(1) : '--';
+
+  C('recycling-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Tasa Reciclaje</div><div class="kpi-val">${recRate}%</div></div>
+    <div class="kpi blue"><div class="kpi-label">Tasa Compostaje</div><div class="kpi-val">${compRate}%</div></div>
+    <div class="kpi red"><div class="kpi-label">A Relleno Sanitario</div><div class="kpi-val">${landRate}%</div></div>
+  `;
+
+  destroyChart('rectrend');
+  if(D.wr.length) {
+    const pctRec  = D.wr.map(r => r.solid ? +((r.recycled/r.solid)*100).toFixed(1) : 0);
+    const pctComp = D.wr.map(r => r.solid ? +((r.composted/r.solid)*100).toFixed(1) : 0);
+    const pctLand = D.wr.map(r => r.solid ? +((1-r.recycled/r.solid-r.composted/r.solid)*100).toFixed(1) : 0);
+    charts.rectrend = new Chart(C('c-rectrend'), {
+      type:'line', data:{ labels:D.wr.map(r=>r.year), datasets:[
+        {label:'Reciclaje %', data:pctRec, borderColor:GC.blue, backgroundColor:'rgba(30,136,229,.08)', tension:.4, fill:true, pointRadius:3},
+        {label:'Compostaje %', data:pctComp, borderColor:GC.green, backgroundColor:'rgba(40,202,66,.08)', tension:.4, fill:true, pointRadius:3},
+        {label:'Relleno %', data:pctLand, borderColor:GC.red, backgroundColor:'rgba(239,83,80,.08)', tension:.4, fill:true, pointRadius:3}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10}}}},
+        scales:{y:{min:0,grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10},callback:v=>v+'%'}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+    });
+  }
+
+  // Mat pie
+  destroyChart('mat2');
+  if(D.materials.length) {
+    charts.mat2 = new Chart(C('c-mat2'), {
+      type:'pie', data:{ labels:D.materials.map(m=>m.name), datasets:[{
+        data:D.materials.map(m=>m.pct),
+        backgroundColor:['#ef5350','#1e88e5','#ff9800','#90a4ae','#00acc1','#8d6e63','#9c27b0','#cfd8dc'],
+        borderWidth:0
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:'#9AABA1',font:{size:10},boxWidth:10}}}}
+    });
+  }
+
+  // Recycle rate vs goal
+  destroyChart('recrate');
+  charts.recrate = new Chart(C('c-recrate'), {
+    type:'bar', data:{ labels:['Papel','Plastico','Metal','Vidrio','Organico','Textil'], datasets:[
+      {label:'Real %', data:[68,32,72,33,28,18], backgroundColor:GC.blue, borderRadius:4},
+      {label:'Meta 2030 %', data:[80,55,85,50,60,40], backgroundColor:'rgba(168,230,193,.3)', borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10}}}},
+      scales:{y:{min:0,max:100,grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10},callback:v=>v+'%'}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+  });
+
+  // Gen vs Rec
+  destroyChart('genvsrec');
+  charts.genvsrec = new Chart(C('c-genvsrec'), {
+    type:'bar', data:{ labels:['Papel','Plastico','Metal','Vidrio','Organico','Textil'], datasets:[
+      {label:'Generado', data:[368,441,245,147,539,294], backgroundColor:'rgba(239,83,80,.4)', borderRadius:3},
+      {label:'Reciclado', data:[250,141,176,49,151,53], backgroundColor:GC.green, borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10}}}},
+      scales:{y:{grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+  });
+}
+
+// ---- TRUCKS ----
+function renderTrucks() {
+  const t = D.trucks;
+  C('trucks-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Total Activos</div><div class="kpi-val">${t.total}</div></div>
+    <div class="kpi blue"><div class="kpi-label">Rutas Completadas</div><div class="kpi-val">${t.completed}</div></div>
+    <div class="kpi gold"><div class="kpi-label">En Movimiento</div><div class="kpi-val">${t.moving}</div></div>
+    <div class="kpi red"><div class="kpi-label">En Espera</div><div class="kpi-val">${t.idle}</div></div>
+    <div class="kpi"><div class="kpi-label">Contenedores</div><div class="kpi-val">${t.bins}</div></div>
+  `;
+
+  destroyChart('truckdonut');
+  const sum = t.completed + t.moving + t.idle;
+  if(sum > 0) {
+    charts.truckdonut = new Chart(C('c-truckdonut'), {
+      type:'doughnut', data:{ labels:['Completadas','En Movimiento','En Espera'], datasets:[{
+        data:[t.completed, t.moving, t.idle],
+        backgroundColor:[GC.green, GC.blue, GC.red], borderWidth:0
+      }]},
+      options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}
+    });
+    C('truck-legend').innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:${GC.green}"></div>Completadas: ${t.completed}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${GC.blue}"></div>En Movimiento: ${t.moving}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${GC.red}"></div>En Espera: ${t.idle}</div>
+    `;
+  }
+
+  C('truck-bins-display').innerHTML = `
+    <div class="truck-stat"><div class="truck-stat-val">${t.bins}</div><div class="truck-stat-lbl">Total Contenedores</div></div>
+  `;
+}
+
+// ---- CALCULATOR ----
+let co2PieChart = null;
+function renderCalc() {
+  // Build calc inputs
+  const cDiv = C('calc-inputs');
+  if(!cDiv.children.length) {
+    cDiv.innerHTML = CO2_KEYS.map((k,i) => `
+      <div class="calc-row">
+        <label>${CO2_LABELS[i]}</label>
+        <input type="number" id="calc-${k}" value="0" min="0" step="1" onchange="updateCalc()" oninput="updateCalc()">
+        <span class="unit">ton</span>
+      </div>
+    `).join('') + `
+      <div style="font-size:.72rem;color:var(--gray-500);margin-top:8px">
+        Factores: Papel 3.16 | Plastico 1.50 | Metal 9.10 | Vidrio 0.31 | Organico 0.50 | E-waste 8.00 ton CO2/ton
+      </div>
+    `;
+  }
+  updateCalc();
+}
+
+function updateCalc() {
+  const vals = {};
+  CO2_KEYS.forEach(k => vals[k] = +(C('calc-'+k)?.value || 0));
+  const parts = {};
+  CO2_KEYS.forEach(k => parts[k] = vals[k] * CO2F[k]);
+  const total = Object.values(parts).reduce((a,b)=>a+b,0);
+
+  C('co2-total').textContent = total.toFixed(1);
+
+  const trees = Math.round(total * 45);
+  const carKm = Math.round(total * 4300);
+  const flights = Math.round(total / 0.255);
+  const phones = Math.round(total * 1000);
+
+  C('co2-equivs').innerHTML = [
+    {icon:'fa-tree', val:trees.toLocaleString(), lbl:'Arboles plantados'},
+    {icon:'fa-car', val:carKm.toLocaleString(), lbl:'Km en auto evitados'},
+    {icon:'fa-plane', val:flights.toLocaleString(), lbl:'Vuelos cortos evitados'},
+    {icon:'fa-mobile-alt', val:phones.toLocaleString(), lbl:'Cargas smartphone'}
+  ].map(e => `<div class="co2-equiv-item"><div class="co2-equiv-val"><i class="fa ${e.icon}"></i> ${e.val}</div><div class="co2-equiv-lbl">${e.lbl}</div></div>`).join('');
+
+  // Bars
+  const maxP = Math.max(...Object.values(parts), 1);
+  C('co2-bars').innerHTML = CO2_KEYS.map((k,i) => `
+    <div class="co2-bar-row">
+      <div class="co2-bar-lbl">${CO2_LABELS[i]}</div>
+      <div class="co2-bar-track"><div class="co2-bar-fill" style="width:${(parts[k]/maxP*100).toFixed(1)}%;background:${CO2_COLORS[i]}"></div></div>
+      <div class="co2-bar-val" style="color:${CO2_COLORS[i]}">${parts[k].toFixed(0)} t</div>
+    </div>
+  `).join('');
+
+  // Pie
+  destroyChart('co2pie');
+  charts.co2pie = new Chart(C('c-co2pie'), {
+    type:'doughnut', data:{ labels:CO2_LABELS, datasets:[{
+      data:CO2_KEYS.map(k=>+parts[k].toFixed(1)), backgroundColor:CO2_COLORS, borderWidth:0
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{color:'#9AABA1',font:{size:10},boxWidth:10}}}}
+  });
+}
+
+// ---- GOALS ----
+function renderGoals() {
+  const lastWR = D.wr.length ? D.wr[D.wr.length-1] : null;
+  const lastGhg = D.ghg.length ? D.ghg[D.ghg.length-1] : null;
+  const recRate  = lastWR && lastWR.solid ? +((lastWR.recycled/lastWR.solid)*100).toFixed(1) : 0;
+  const compRate = lastWR && lastWR.solid ? +((lastWR.composted/lastWR.solid)*100).toFixed(1) : 0;
+  const ghgVal   = lastGhg ? lastGhg.value : 0;
+  const landRate = lastWR && lastWR.solid ? +((1-lastWR.recycled/lastWR.solid-lastWR.composted/lastWR.solid)*100).toFixed(1) : 0;
+  const divRate  = lastWR && lastWR.solid ? +((lastWR.recycled/lastWR.solid+lastWR.composted/lastWR.solid)*100).toFixed(1) : 0;
+
+  C('goals-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Reciclaje Actual</div><div class="kpi-val">${recRate}%</div><div class="kpi-delta good">Meta 2030: 60%</div></div>
+    <div class="kpi blue"><div class="kpi-label">GHG Actual</div><div class="kpi-val">${ghgVal}M</div><div class="kpi-delta good">Meta 2030: 60M</div></div>
+    <div class="kpi gold"><div class="kpi-label">Meta Zero Waste</div><div class="kpi-val">2040</div><div class="kpi-delta warn">Relleno: 0%</div></div>
+  `;
+
+  const goals = [
+    {name:'Tasa de Reciclaje', current:recRate, target:60, unit:'%', status: recRate>=50?'green':recRate>=30?'yellow':'red'},
+    {name:'Reduccion GHG', current:ghgVal, target:60, unit:'M', status: ghgVal<=65?'green':ghgVal<=72?'yellow':'red', invert:true},
+    {name:'Tasa de Compostaje', current:compRate, target:30, unit:'%', status: compRate>=20?'green':compRate>=10?'yellow':'red'},
+    {name:'Residuos a Relleno', current:landRate, target:10, unit:'%', status: landRate<=20?'green':landRate<=40?'yellow':'red', invert:true},
+    {name:'Desvio de Residuos', current:divRate, target:90, unit:'%', status: divRate>=70?'green':divRate>=50?'yellow':'red'},
+  ];
+  const badgeMap = {green:'badge-green',yellow:'badge-yellow',red:'badge-red'};
+  const badgeTxt = {green:'En meta',yellow:'En progreso',red:'Atencion'};
+  C('goals-tbody').innerHTML = goals.map(g => {
+    const pct = g.invert ? Math.min(100, Math.max(0, Math.round(100-(g.current-g.target)/g.current*100))) : Math.min(100, Math.round(g.current/g.target*100));
+    return `<tr>
+      <td><strong>${g.name}</strong></td><td>${g.current}${g.unit}</td><td>${g.target}${g.unit}</td>
+      <td><div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${g.status==='red'?GC.red:g.status==='yellow'?GC.gold:GC.green}"></div></div><small style="color:var(--gray-500)">${pct}%</small></td>
+      <td><span class="badge ${badgeMap[g.status]}">${badgeTxt[g.status]}</span></td>
+    </tr>`;
+  }).join('');
+
+  // Projection charts
+  const projYears = [2024,2025,2026,2027,2028,2029,2030];
+  destroyChart('proj');
+  charts.proj = new Chart(C('c-proj'), {
+    type:'line', data:{ labels:projYears, datasets:[
+      {label:'Base', data:[recRate, recRate+2, recRate+4, recRate+6, recRate+7.5, recRate+9, recRate+10.5], borderColor:GC.blue, backgroundColor:'rgba(30,136,229,.08)', tension:.4, fill:true, borderWidth:2},
+      {label:'Acelerado', data:[recRate, recRate+4, recRate+8, recRate+11, recRate+13, recRate+15, recRate+17], borderColor:GC.green, backgroundColor:'rgba(40,202,66,.08)', tension:.4, fill:true, borderWidth:2},
+      {label:'Meta 60%', data:[60,60,60,60,60,60,60], borderColor:GC.red, borderDash:[6,4], pointRadius:0, borderWidth:2, fill:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10}}}},
+      scales:{y:{min:Math.max(0,recRate-10),max:80,grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10},callback:v=>v+'%'}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+  });
+
+  destroyChart('ghgproj');
+  charts.ghgproj = new Chart(C('c-ghgproj'), {
+    type:'line', data:{ labels:projYears, datasets:[
+      {label:'Proyeccion GHG', data:projYears.map((_,i) => +(ghgVal - i*(ghgVal-60)/6).toFixed(1)),
+       borderColor:GC.red, backgroundColor:'rgba(239,83,80,.1)', tension:.4, fill:true, borderWidth:2},
+      {label:'Meta 60M', data:[60,60,60,60,60,60,60], borderColor:GC.green, borderDash:[6,4], pointRadius:0, borderWidth:2, fill:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#9AABA1',font:{size:10}}}},
+      scales:{y:{min:55,max:Math.max(75,ghgVal+5),grid:{color:gridColor},ticks:{color:'#9AABA1',font:{size:10}}},x:{grid:{display:false},ticks:{color:'#9AABA1',font:{size:10}}}}}
+  });
+}
+
+// ====================================================
+// INIT
+// ====================================================
+function init() {
+  loadLocal();
+  // If empty, set defaults for materials/energy names
+  if(!D.materials.length) D.materials = MAT_DEFAULTS.map(n => ({name:n, pct:0}));
+  if(!D.energy.length) D.energy = ENE_DEFAULTS.map(n => ({name:n, pct:0}));
+  if(!D.trucks) D.trucks = {total:0,completed:0,moving:0,idle:0,bins:0};
+  if(!D.regions) D.regions = [];
+  buildForms();
+  renderAll();
+  loadFromAWS(); // try to load from AWS silently
+}
+init();
+</script>
+</body>
+</html>

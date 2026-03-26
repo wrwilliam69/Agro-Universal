@@ -27,8 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===== SMOOTH SCROLL =====
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', e => {
+            const href = anchor.getAttribute('href');
+            if (!href.startsWith('#')) return; // skip external links like dashboard.html
             e.preventDefault();
-            const target = document.querySelector(anchor.getAttribute('href'));
+            const target = document.querySelector(href);
             if (target) {
                 const offset = 80;
                 const top = target.getBoundingClientRect().top + window.scrollY - offset;
