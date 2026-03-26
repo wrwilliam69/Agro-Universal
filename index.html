@@ -100,9 +100,29 @@
         <div class="container">
             <div class="section-header animate-on-scroll">
                 <span class="section-tag">Dashboard en Vivo</span>
-                <h2 class="section-title">Análisis de <span class="text-gradient">Métricas en Tiempo Real</span></h2>
-                <p class="section-desc">Interactúa con las gráficas a continuación para visualizar la gestión de residuos y el consumo de energía.</p>
+                <h2 class="section-title">Simulador de <span class="text-gradient">Impacto Ambiental</span></h2>
+                <p class="section-desc">Mueve los controles a continuación para simular escenarios. Las gráficas calcularán y se actualizarán matemáticamente en tiempo real.</p>
             </div>
+
+            <!-- Controles del Simulador -->
+            <div class="dashboard-controls animate-on-scroll">
+                <div class="control-group">
+                    <label for="simWaste">Residuos Generados (Ton/mes)</label>
+                    <input type="range" id="simWaste" min="500" max="5000" value="1500" step="10">
+                    <span id="simWasteVal">1,500 Ton</span>
+                </div>
+                <div class="control-group">
+                    <label for="simRecycled">Material Reciclado (Ton/mes)</label>
+                    <input type="range" id="simRecycled" min="0" max="5000" value="900" step="10">
+                    <span id="simRecycledVal">900 Ton</span>
+                </div>
+                <div class="control-group">
+                    <label for="simEnergy">Consumo de Energía (MWh)</label>
+                    <input type="range" id="simEnergy" min="100" max="2000" value="850" step="5">
+                    <span id="simEnergyVal">850 MWh</span>
+                </div>
+            </div>
+
             <div class="dashboard-grid">
                 <div class="chart-card animate-on-scroll">
                     <h3>Emisiones de Gases Invernadero</h3>

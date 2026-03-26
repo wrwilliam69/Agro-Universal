@@ -256,6 +256,8 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
     });
 
     // ===== CHART.JS DASHBOARD INITIALIZATION =====
+    let dashboardCharts = {};
+
     function initCharts() {
         if (typeof Chart === 'undefined') return;
 
@@ -267,28 +269,28 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
         // 1. Emisiones GHG (Bar)
         const ctxGhg = document.getElementById('chartGhg');
         if (ctxGhg) {
-            new Chart(ctxGhg.getContext('2d'), {
+            dashboardCharts.ghg = new Chart(ctxGhg.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['2019', '2020', '2021', '2022', '2023'],
+                    labels: ['2019', '2020', '2021', '2022', 'Calculado (Ahora)'],
                     datasets: [{
-                        label: 'Millones de Ton CO2eq',
+                        label: 'Emisiones de CO2eq',
                         data: [75.6, 74.6, 70.9, 69.6, 65.2],
-                        backgroundColor: '#34A853',
+                        backgroundColor: ['#1A5C3A', '#1A5C3A', '#1A5C3A', '#1A5C3A', '#34A853'],
                         borderRadius: 4
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: gridConfig, min: 25 }, x: { grid: {display: false} } }, plugins: { legend: { display: false } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: gridConfig, min: 0 }, x: { grid: {display: false} } }, plugins: { legend: { display: false } } }
             });
         }
 
         // 2. % Residuos Domésticos (Bar + Line)
         const ctxWaste = document.getElementById('chartWaste');
         if (ctxWaste) {
-            new Chart(ctxWaste.getContext('2d'), {
+            dashboardCharts.waste = new Chart(ctxWaste.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['Zona 1', 'Zona 2', 'Zona 3', 'Zona 4', 'Zona 5', 'Zona 6'],
+                    labels: ['Zona 1', 'Zona 2', 'Zona 3', 'Zona 4', 'Zona 5', 'Planta (Simulador)'],
                     datasets: [{
                         type: 'line',
                         label: 'Límite Objetivo',
@@ -298,26 +300,26 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
                         pointRadius: 0
                     }, {
                         type: 'bar',
-                        label: '% Residuo Doméstico',
+                        label: '% Residuo Orgánico/Doméstico',
                         data: [61, 58, 55, 45, 40, 35],
-                        backgroundColor: '#1A5C3A',
+                        backgroundColor: ['#1A5C3A', '#1A5C3A', '#1A5C3A', '#1A5C3A', '#1A5C3A', '#C8A951'],
                         borderRadius: 4
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: gridConfig, max: 70 }, x: { grid: {display: false} } }, plugins: { legend: { display: false } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: gridConfig, max: 100 }, x: { grid: {display: false} } }, plugins: { legend: { display: false } } }
             });
         }
 
         // 3. Energía por Combustible (Doughnut)
         const ctxEnergy = document.getElementById('chartEnergy');
         if (ctxEnergy) {
-            new Chart(ctxEnergy.getContext('2d'), {
+            dashboardCharts.energy = new Chart(ctxEnergy.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Ventas', 'Gas Natural', 'Gasolina Motor', 'Aceite', 'Productos', 'Biomasa', 'Otros'],
+                    labels: ['Renovable', 'Gas Natural', 'Gasolina Motor', 'Subproductos', 'Biomasa'],
                     datasets: [{
-                        data: [20, 32, 18, 17, 10, 8, 5],
-                        backgroundColor: ['#258750', '#5BBC73', '#A8E6C1', '#C8A951', '#E0CB83', '#6B7D73', '#0B3D2E'],
+                        data: [35, 32, 18, 10, 5],
+                        backgroundColor: ['#34A853', '#A8E6C1', '#C8A951', '#E0CB83', '#5BBC73'],
                         borderWidth: 0
                     }]
                 },
@@ -328,13 +330,13 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
         // 4. Camiones Recolectores (Doughnut)
         const ctxTrucks = document.getElementById('chartTrucks');
         if (ctxTrucks) {
-            new Chart(ctxTrucks.getContext('2d'), {
+            dashboardCharts.trucks = new Chart(ctxTrucks.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['En Ruta', 'En Planta', 'Reparación', 'Inactivos'],
+                    labels: ['Moviendo Reciclaje', 'Moviendo Residuos', 'En Espera'],
                     datasets: [{
-                        data: [60, 20, 16, 4],
-                        backgroundColor: ['#34A853', '#A8E6C1', '#C8A951', '#1A2620'],
+                        data: [45, 40, 15],
+                        backgroundColor: ['#34A853', '#1A2620', '#C8A951'],
                         borderWidth: 0
                     }]
                 },
@@ -345,18 +347,18 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
         // 5. Residuos vs Reciclaje (Stacked Bar)
         const ctxRecycling = document.getElementById('chartRecycling');
         if (ctxRecycling) {
-            new Chart(ctxRecycling.getContext('2d'), {
+            dashboardCharts.recycling = new Chart(ctxRecycling.getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['2019', '2020', '2021', '2022', '2023'],
+                    labels: ['2019', '2020', '2021', '2022', 'Calculado (Ahora)'],
                     datasets: [{
-                        label: 'Residuos Sólidos',
-                        data: [1600, 1400, 1500, 1300, 1200],
-                        backgroundColor: '#34A853'
-                    }, {
                         label: 'Material Reciclado',
                         data: [900, 1000, 1100, 1200, 1400],
-                        backgroundColor: '#258750'
+                        backgroundColor: '#34A853'
+                    }, {
+                        label: 'Basura Sólida',
+                        data: [1600, 1400, 1500, 1300, 1200],
+                        backgroundColor: '#1A2620'
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, grid: {display: false} }, y: { stacked: true, grid: gridConfig } } }
@@ -366,19 +368,92 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
         // 6. Disposición Final de Materiales (Doughnut)
         const ctxMaterials = document.getElementById('chartMaterials');
         if (ctxMaterials) {
-            new Chart(ctxMaterials.getContext('2d'), {
+            dashboardCharts.materials = new Chart(ctxMaterials.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Orgánico', 'Plástico', 'Papel', 'Textil', 'Metal', 'Madera', 'Vidrio'],
+                    labels: ['Orgánico Compostado', 'Plástico Reciclado', 'Papel/Cartón', 'Desecho No Recuperable'],
                     datasets: [{
-                        data: [25, 18, 15, 12, 10, 9, 11],
-                        backgroundColor: ['#0F5132', '#1A5C3A', '#258750', '#34A853', '#5BBC73', '#C8A951', '#D4BA6A'],
+                        data: [40, 25, 20, 15],
+                        backgroundColor: ['#0F5132', '#34A853', '#C8A951', '#1A2620'],
                         borderWidth: 0
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, cutout: '50%', plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: {size: 10} } } } }
             });
         }
+
+        setupSimulator();
+    }
+
+    // ===== LÓGICA DEL SIMULADOR =====
+    function setupSimulator() {
+        const simWaste = document.getElementById('simWaste');
+        const simRecycled = document.getElementById('simRecycled');
+        const simEnergy = document.getElementById('simEnergy');
+        
+        const simWasteVal = document.getElementById('simWasteVal');
+        const simRecycledVal = document.getElementById('simRecycledVal');
+        const simEnergyVal = document.getElementById('simEnergyVal');
+
+        if (!simWaste || !simRecycled || !simEnergy) return;
+
+        function updateSimulation() {
+            let waste = parseInt(simWaste.value);
+            let recycled = parseInt(simRecycled.value);
+            let energy = parseInt(simEnergy.value);
+
+            // Validar que no se recicle algebraicasmente más de la basura total
+            if (recycled > waste) {
+                recycled = waste;
+                simRecycled.value = waste;
+            }
+
+            simWasteVal.textContent = waste.toLocaleString('es-CO') + ' Ton';
+            simRecycledVal.textContent = recycled.toLocaleString('es-CO') + ' Ton';
+            simEnergyVal.textContent = energy.toLocaleString('es-CO') + ' MWh';
+
+            let nonRecycled = waste - recycled;
+
+            // 1. Chart GHG (Cálculo de emisiones simuladas: energía * 0.04 + basura no reciclada * 0.08)
+            if (dashboardCharts.ghg) {
+                let currentGhg = parseFloat(((energy * 0.04) + (nonRecycled * 0.08)).toFixed(1));
+                dashboardCharts.ghg.data.datasets[0].data[4] = currentGhg;
+                dashboardCharts.ghg.update();
+            }
+
+            // 5. Chart Residuos vs Reciclaje (Última barra = calculos actuales)
+            if (dashboardCharts.recycling) {
+                dashboardCharts.recycling.data.datasets[0].data[4] = recycled;      // Reciclado
+                dashboardCharts.recycling.data.datasets[1].data[4] = nonRecycled;   // Basura
+                dashboardCharts.recycling.update();
+            }
+
+            // 2. Chart % Residuos
+            if (dashboardCharts.waste) {
+                // Simulamos que el % de orgánicos sube si hay más reciclaje
+                let percent = 20 + ((recycled / waste) * 40);
+                dashboardCharts.waste.data.datasets[1].data[5] = Math.round(percent);
+                dashboardCharts.waste.update();
+            }
+
+            // 4. Camiones
+            if (dashboardCharts.trucks) {
+                // Entre más reciclaje, más camiones se ocupan de materiales recuperables
+                let reciTrucks = Math.round((recycled / waste) * 70) + 10;
+                let trashTrucks = Math.round((nonRecycled / waste) * 70) + 10;
+                let idleTrucks = 100 - (reciTrucks + trashTrucks);
+                dashboardCharts.trucks.data.datasets[0].data = [reciTrucks, trashTrucks, idleTrucks];
+                dashboardCharts.trucks.update();
+            }
+        }
+
+        // Escuchar eventos de arrastre
+        simWaste.addEventListener('input', updateSimulation);
+        simRecycled.addEventListener('input', updateSimulation);
+        simEnergy.addEventListener('input', updateSimulation);
+        
+        // Ejecución Inicial
+        updateSimulation();
     }
 
     // Initialize charts slightly after load to ensure canvas is painted

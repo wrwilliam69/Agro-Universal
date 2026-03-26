@@ -788,6 +788,38 @@ ul { list-style: none; }
     position: relative;
     border-bottom: 1px solid rgba(255,255,255,0.04);
 }
+.dashboard-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(37, 135, 80, 0.2);
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 50px;
+    backdrop-filter: blur(10px);
+}
+.control-group label {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--gray-300);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+.control-group input[type="range"] {
+    width: 100%;
+    accent-color: var(--green-400);
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.control-group span {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--gold-400);
+    font-weight: 800;
+    text-align: right;
+}
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
