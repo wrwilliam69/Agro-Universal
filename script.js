@@ -255,4 +255,133 @@ fetch('https://vx45elu3qb.execute-api.us-east-1.amazonaws.com/Prod/contactos', {
         }
     });
 
+    // ===== CHART.JS DASHBOARD INITIALIZATION =====
+    function initCharts() {
+        if (typeof Chart === 'undefined') return;
+
+        // Common configurations
+        Chart.defaults.color = '#9AABA1';
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        const gridConfig = { color: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' };
+
+        // 1. Emisiones GHG (Bar)
+        const ctxGhg = document.getElementById('chartGhg');
+        if (ctxGhg) {
+            new Chart(ctxGhg.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: 'Millones de Ton CO2eq',
+                        data: [75.6, 74.6, 70.9, 69.6, 65.2],
+                        backgroundColor: '#34A853',
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: gridConfig, min: 25 }, x: { grid: {display: false} } }, plugins: { legend: { display: false } } }
+            });
+        }
+
+        // 2. % Residuos Domésticos (Bar + Line)
+        const ctxWaste = document.getElementById('chartWaste');
+        if (ctxWaste) {
+            new Chart(ctxWaste.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Zona 1', 'Zona 2', 'Zona 3', 'Zona 4', 'Zona 5', 'Zona 6'],
+                    datasets: [{
+                        type: 'line',
+                        label: 'Límite Objetivo',
+                        data: [50, 50, 50, 50, 50, 50],
+                        borderColor: '#C8A951',
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }, {
+                        type: 'bar',
+                        label: '% Residuo Doméstico',
+                        data: [61, 58, 55, 45, 40, 35],
+                        backgroundColor: '#1A5C3A',
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: gridConfig, max: 70 }, x: { grid: {display: false} } }, plugins: { legend: { display: false } } }
+            });
+        }
+
+        // 3. Energía por Combustible (Doughnut)
+        const ctxEnergy = document.getElementById('chartEnergy');
+        if (ctxEnergy) {
+            new Chart(ctxEnergy.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ventas', 'Gas Natural', 'Gasolina Motor', 'Aceite', 'Productos', 'Biomasa', 'Otros'],
+                    datasets: [{
+                        data: [20, 32, 18, 17, 10, 8, 5],
+                        backgroundColor: ['#258750', '#5BBC73', '#A8E6C1', '#C8A951', '#E0CB83', '#6B7D73', '#0B3D2E'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: {size: 11} } } } }
+            });
+        }
+
+        // 4. Camiones Recolectores (Doughnut)
+        const ctxTrucks = document.getElementById('chartTrucks');
+        if (ctxTrucks) {
+            new Chart(ctxTrucks.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['En Ruta', 'En Planta', 'Reparación', 'Inactivos'],
+                    datasets: [{
+                        data: [60, 20, 16, 4],
+                        backgroundColor: ['#34A853', '#A8E6C1', '#C8A951', '#1A2620'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: {size: 11} } } } }
+            });
+        }
+
+        // 5. Residuos vs Reciclaje (Stacked Bar)
+        const ctxRecycling = document.getElementById('chartRecycling');
+        if (ctxRecycling) {
+            new Chart(ctxRecycling.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['2019', '2020', '2021', '2022', '2023'],
+                    datasets: [{
+                        label: 'Residuos Sólidos',
+                        data: [1600, 1400, 1500, 1300, 1200],
+                        backgroundColor: '#34A853'
+                    }, {
+                        label: 'Material Reciclado',
+                        data: [900, 1000, 1100, 1200, 1400],
+                        backgroundColor: '#258750'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true, grid: {display: false} }, y: { stacked: true, grid: gridConfig } } }
+            });
+        }
+
+        // 6. Disposición Final de Materiales (Doughnut)
+        const ctxMaterials = document.getElementById('chartMaterials');
+        if (ctxMaterials) {
+            new Chart(ctxMaterials.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Orgánico', 'Plástico', 'Papel', 'Textil', 'Metal', 'Madera', 'Vidrio'],
+                    datasets: [{
+                        data: [25, 18, 15, 12, 10, 9, 11],
+                        backgroundColor: ['#0F5132', '#1A5C3A', '#258750', '#34A853', '#5BBC73', '#C8A951', '#D4BA6A'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '50%', plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: {size: 10} } } } }
+            });
+        }
+    }
+
+    // Initialize charts slightly after load to ensure canvas is painted
+    setTimeout(initCharts, 200);
+
 });

@@ -781,6 +781,45 @@ ul { list-style: none; }
     font-size: 0.95rem;
 }
 
+/* ========== DASHBOARD INTERACTIVO ========== */
+.dashboard-section {
+    padding: 120px 0;
+    background: var(--dark-800);
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+.chart-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+.chart-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(37, 135, 80, 0.3);
+    box-shadow: var(--shadow-glow);
+}
+.chart-card h3 {
+    font-size: 1.05rem;
+    font-family: var(--font-display);
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--white);
+    font-weight: 600;
+}
+.chart-container {
+    position: relative;
+    height: 280px;
+    width: 100%;
+}
+
 /* ========== FOOTER ========== */
 .footer {
     padding: 60px 0 0;

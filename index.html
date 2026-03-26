@@ -31,6 +31,7 @@
             </a>
             <div class="nav-links" id="navLinks">
                 <a href="#inicio" class="nav-link active">Inicio</a>
+                <a href="#dashboard" class="nav-link">Dashboard</a>
                 <a href="#nosotros" class="nav-link">Nosotros</a>
                 <a href="#plataforma" class="nav-link">Plataforma</a>
                 <a href="#beneficios" class="nav-link">Beneficios</a>
@@ -91,6 +92,55 @@
         <div class="hero-scroll-indicator">
             <div class="scroll-line"></div>
             <span>Desliza</span>
+        </div>
+    </section>
+
+    <!-- ========== DASHBOARD INTERACTIVO ========== -->
+    <section class="dashboard-section" id="dashboard">
+        <div class="container">
+            <div class="section-header animate-on-scroll">
+                <span class="section-tag">Dashboard en Vivo</span>
+                <h2 class="section-title">Análisis de <span class="text-gradient">Métricas en Tiempo Real</span></h2>
+                <p class="section-desc">Interactúa con las gráficas a continuación para visualizar la gestión de residuos y el consumo de energía.</p>
+            </div>
+            <div class="dashboard-grid">
+                <div class="chart-card animate-on-scroll">
+                    <h3>Emisiones de Gases Invernadero</h3>
+                    <div class="chart-container">
+                        <canvas id="chartGhg"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card animate-on-scroll" data-delay="100">
+                    <h3>% de Residuos Domésticos</h3>
+                    <div class="chart-container">
+                        <canvas id="chartWaste"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card animate-on-scroll" data-delay="200">
+                    <h3>Uso de Energía por Combustible</h3>
+                    <div class="chart-container">
+                        <canvas id="chartEnergy"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card animate-on-scroll" data-delay="300">
+                    <h3>Estado de Camiones Recolectores</h3>
+                    <div class="chart-container">
+                        <canvas id="chartTrucks"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card animate-on-scroll" data-delay="400">
+                    <h3>Residuos vs Reciclaje</h3>
+                    <div class="chart-container">
+                        <canvas id="chartRecycling"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card animate-on-scroll" data-delay="500">
+                    <h3>Disposición Final de Residuos</h3>
+                    <div class="chart-container">
+                        <canvas id="chartMaterials"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -428,6 +478,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
